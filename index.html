@@ -46,7 +46,20 @@
 
     .hero-image{
       flex:0 0 auto;
+    }
+
+    /* Обёртка: сюда параллакс и hover, чтобы не ломать reveal-photo */
+    .hero-image-wrap{
       position:relative;
+      will-change: transform;
+      transform: translateY(var(--parallax, 0px));
+      transition: transform 220ms ease;
+    }
+
+    @media (hover:hover){
+      .hero-image-wrap:hover{
+        transform: translateY(var(--parallax, 0px)) scale(1.01);
+      }
     }
 
     .hero-image img{
@@ -56,15 +69,6 @@
       box-shadow:var(--shadow);
       display:block;
       will-change: transform, opacity, filter;
-      transform: translateY(var(--parallax, 0px));
-      transition: transform 220ms ease; /* только для параллакса/hover */
-    }
-
-    /* Тонкий hover (дорогой, не кричащий) */
-    @media (hover:hover){
-      .hero-image:hover img{
-        transform: translateY(var(--parallax, 0px)) scale(1.01);
-      }
     }
 
     .hero-content{
@@ -163,7 +167,7 @@
       filter: blur(0);
     }
 
-    /* Фото: медленнее */
+    /* Фото: медленнее (и теперь НИЧТО это не перебивает) */
     .reveal-photo{
       opacity:0;
       transform: translateY(16px) scale(.985);
@@ -193,7 +197,7 @@
         transform:none !important;
         filter:none !important;
       }
-      .hero-image img{ transition:none !important; transform:none !important; }
+      .hero-image-wrap{ transition:none !important; transform:none !important; }
     }
 
     /* MOBILE */
@@ -212,13 +216,14 @@
 
 <body>
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-wrapper">
 
       <div class="hero-image">
-        <!-- Положи рядом файл hero.jpg -->
-        <img class="reveal-photo d1" src="hero.jpg" alt="Агент и клиент — одна сторона сделки">
+        <div class="hero-image-wrap">
+          <!-- Положи рядом файл hero.jpg -->
+          <img class="reveal-photo d1" src="hero.jpg" alt="Агент и клиент — одна сторона сделки">
+        </div>
       </div>
 
       <div class="hero-content">
@@ -238,7 +243,6 @@
     </div>
   </section>
 
-  <!-- ABOUT -->
   <section class="about" id="about">
     <div class="about-inner">
       <h2 class="reveal">Партнёрство, а не давление</h2>
@@ -250,14 +254,12 @@
     </div>
   </section>
 
-  <!-- CONTACT (пока якорь; форму добавим следующим шагом) -->
   <div id="contact"></div>
 
   <script>
     // Появление элементов при загрузке/скролле
     (function() {
       const els = Array.from(document.querySelectorAll('.reveal, .reveal-photo'));
-
       const show = (el) => el.classList.add('in');
 
       if (!('IntersectionObserver' in window)) {
@@ -277,12 +279,11 @@
       els.forEach((el) => io.observe(el));
     })();
 
-    // Очень лёгкий параллакс на фото при скролле (сильно не двигаем)
+    // Очень лёгкий параллакс на фото (на обёртке, не на img)
     (function() {
-      const img = document.querySelector('.hero-image img');
-      if (!img) return;
+      const wrap = document.querySelector('.hero-image-wrap');
+      if (!wrap) return;
 
-      // На мобилках параллакс часто лишний — ограничим hover-only устройства
       const canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
       if (!canHover) return;
 
@@ -293,17 +294,11 @@
         ticking = true;
 
         requestAnimationFrame(() => {
-          const rect = img.getBoundingClientRect();
+          const rect = wrap.getBoundingClientRect();
           const vh = window.innerHeight || 800;
-
-          // Нормализуем положение фото в окне: 0..1
           const t = Math.min(1, Math.max(0, (rect.top + rect.height * 0.5) / vh));
-
-          // Смещение: от +10px до -10px (очень мягко)
-          const shift = (0.5 - t) * 20;
-
-          img.style.setProperty('--parallax', shift.toFixed(2) + 'px');
-
+          const shift = (0.5 - t) * 20; // очень мягко: -10..+10px
+          wrap.style.setProperty('--parallax', shift.toFixed(2) + 'px');
           ticking = false;
         });
       }
