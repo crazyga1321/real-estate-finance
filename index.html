@@ -6,131 +6,197 @@
   <title>Агент и клиент — одна сторона сделки</title>
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    :root{
+      --bg:#0f0f12;
+      --bg2:#111;
+      --text:#fff;
+      --muted:rgba(255,255,255,.85);
+      --muted2:rgba(255,255,255,.72);
+      --border:rgba(255,255,255,.18);
+      --accent:#c62828;
+      --accent2:#e53935;
+      --shadow:0 30px 80px rgba(0,0,0,.6);
+      --radius:6px;
     }
 
-    body {
-      background: #0f0f12;
-      color: #ffffff;
+    *{ margin:0; padding:0; box-sizing:border-box; }
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      overflow-x:hidden;
     }
 
     /* HERO */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 80px 40px;
+    .hero{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:80px 40px;
     }
 
-    .hero-wrapper {
-      display: flex;
-      align-items: center;
-      max-width: 1200px;
-      width: 100%;
-      gap: 80px;
+    .hero-wrapper{
+      display:flex;
+      align-items:center;
+      max-width:1200px;
+      width:100%;
+      gap:80px;
     }
 
-    .hero-image img {
-      width: 480px;
-      max-width: 100%;
-      border-radius: 6px;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    .hero-image{
+      flex:0 0 auto;
+      position:relative;
     }
 
-    .hero-content {
-      max-width: 520px;
+    .hero-image img{
+      width:480px;
+      max-width:100%;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      display:block;
+      will-change: transform, opacity, filter;
     }
 
-    .hero-content h1 {
-      font-size: 48px;
-      line-height: 1.2;
-      margin-bottom: 24px;
+    .hero-content{
+      max-width:540px;
     }
 
-    .hero-content p {
-      font-size: 18px;
-      line-height: 1.6;
-      opacity: 0.85;
-      margin-bottom: 36px;
+    .hero-content h1{
+      font-size:48px;
+      line-height:1.15;
+      margin-bottom:22px;
+      letter-spacing:-0.5px;
     }
 
-    .buttons {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
+    .hero-content p{
+      font-size:18px;
+      line-height:1.6;
+      color:var(--muted);
+      margin-bottom:34px;
     }
 
-    .btn-primary {
-      background: #c62828;
-      color: #ffffff;
-      padding: 14px 30px;
-      text-decoration: none;
-      font-weight: 600;
-      border-radius: 4px;
-      transition: 0.3s ease;
+    .buttons{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
     }
 
-    .btn-primary:hover {
-      background: #e53935;
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:14px 28px;
+      border-radius:4px;
+      text-decoration:none;
+      font-weight:600;
+      transition:transform .2s ease, background .2s ease, border-color .2s ease, opacity .2s ease;
+      will-change: transform, opacity;
+      user-select:none;
     }
 
-    .btn-secondary {
-      border: 1px solid rgba(255,255,255,0.3);
-      color: #ffffff;
-      padding: 14px 30px;
-      text-decoration: none;
-      font-weight: 500;
-      border-radius: 4px;
-      opacity: 0.8;
+    .btn-primary{
+      background:var(--accent);
+      color:#fff;
+      border:1px solid transparent;
     }
+    .btn-primary:hover{ background:var(--accent2); transform:translateY(-1px); }
+
+    .btn-secondary{
+      background:transparent;
+      color:#fff;
+      border:1px solid var(--border);
+      opacity:.9;
+    }
+    .btn-secondary:hover{ border-color:rgba(255,255,255,.35); transform:translateY(-1px); }
 
     /* SECOND SECTION */
-    .about {
-      padding: 120px 40px;
-      background: #111;
+    .about{
+      padding:110px 40px;
+      background:var(--bg2);
+      border-top:1px solid rgba(255,255,255,.06);
     }
 
-    .about-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      text-align: center;
+    .about-inner{
+      max-width:920px;
+      margin:0 auto;
+      text-align:center;
     }
 
-    .about h2 {
-      font-size: 36px;
-      margin-bottom: 24px;
+    .about h2{
+      font-size:36px;
+      margin-bottom:20px;
+      letter-spacing:-0.3px;
     }
 
-    .about p {
-      font-size: 18px;
-      line-height: 1.7;
-      opacity: 0.85;
+    .about p{
+      font-size:18px;
+      line-height:1.7;
+      color:var(--muted2);
+    }
+
+    /* CONTACT anchor spacing (если позже добавим форму) */
+    #contact{ scroll-margin-top:80px; }
+
+    /* --- ANIMATION SYSTEM --- */
+    /* Элементы появляются только когда добавится класс .in */
+    .reveal{
+      opacity:0;
+      transform: translateY(18px);
+      filter: blur(6px);
+      transition:
+        opacity 700ms cubic-bezier(.2,.8,.2,1),
+        transform 700ms cubic-bezier(.2,.8,.2,1),
+        filter 700ms cubic-bezier(.2,.8,.2,1);
+    }
+    .reveal.in{
+      opacity:1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    /* Фото чуть более "дорого": отдельная анимация */
+    .reveal-photo{
+      opacity:0;
+      transform: translateY(16px) scale(.985);
+      filter: blur(10px);
+      transition:
+        opacity 850ms cubic-bezier(.2,.8,.2,1),
+        transform 850ms cubic-bezier(.2,.8,.2,1),
+        filter 850ms cubic-bezier(.2,.8,.2,1);
+    }
+    .reveal-photo.in{
+      opacity:1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+
+    /* Задержки (степпинг) */
+    .d1{ transition-delay: 80ms; }
+    .d2{ transition-delay: 180ms; }
+    .d3{ transition-delay: 280ms; }
+    .d4{ transition-delay: 380ms; }
+
+    /* Уважение к reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .reveal, .reveal-photo{
+        transition:none !important;
+        opacity:1 !important;
+        transform:none !important;
+        filter:none !important;
+      }
     }
 
     /* MOBILE */
-    @media (max-width: 900px) {
-      .hero-wrapper {
-        flex-direction: column;
-        text-align: center;
-        gap: 48px;
+    @media (max-width: 900px){
+      .hero{ padding:60px 20px; }
+      .hero-wrapper{
+        flex-direction:column;
+        text-align:center;
+        gap:46px;
       }
-
-      .hero-content h1 {
-        font-size: 36px;
-      }
-
-      .hero {
-        padding: 60px 20px;
-      }
-
-      .about {
-        padding: 80px 20px;
-      }
+      .hero-content h1{ font-size:36px; }
+      .about{ padding:80px 20px; }
     }
   </style>
 </head>
@@ -142,20 +208,21 @@
     <div class="hero-wrapper">
 
       <div class="hero-image">
-        <!-- ЗАМЕНИ hero.jpg НА СВОЮ КАРТИНКУ -->
-        <img src="hero.jpg" alt="Агент и клиент — одна сторона сделки">
+        <!-- ЗАМЕНИ НА СВОЮ КАРТИНКУ: положи рядом файл hero.jpg -->
+        <img class="reveal-photo d1" src="hero.jpg" alt="Агент и клиент — одна сторона сделки">
       </div>
 
       <div class="hero-content">
-        <h1>Агент и клиент — одна сторона сделки</h1>
-        <p>
+        <h1 class="reveal d2">Агент и клиент — одна сторона сделки</h1>
+
+        <p class="reveal d3">
           Недвижимость без конфликта интересов.<br>
           Я работаю так, как будто совершаю сделку для себя.
         </p>
 
-        <div class="buttons">
-          <a href="#contact" class="btn-primary">Обсудить задачу</a>
-          <a href="#about" class="btn-secondary">Мой подход</a>
+        <div class="buttons reveal d4">
+          <a href="#contact" class="btn btn-primary">Обсудить задачу</a>
+          <a href="#about" class="btn btn-secondary">Мой подход</a>
         </div>
       </div>
 
@@ -165,15 +232,44 @@
   <!-- ABOUT -->
   <section class="about" id="about">
     <div class="about-inner">
-      <h2>Партнёрство, а не давление</h2>
-      <p>
-        Я не продаю объекты — я помогаю принимать решения.
-        Моя задача — защитить интересы клиента и провести сделку
-        спокойно, прозрачно и профессионально.
+      <h2 class="reveal">Партнёрство, а не давление</h2>
+      <p class="reveal">
+        Я не «продаю объекты» — я помогаю принимать решения.
+        Моя задача — защитить интересы клиента и провести сделку спокойно,
+        прозрачно и профессионально.
       </p>
     </div>
   </section>
 
+  <!-- CONTACT (пока якорь; форму добавим следующим шагом) -->
+  <div id="contact"></div>
+
+  <script>
+    // Плавное появление элементов при загрузке и при скролле (если добавишь секции ниже)
+    (function() {
+      const els = Array.from(document.querySelectorAll('.reveal, .reveal-photo'));
+
+      // На быстрых устройствах можно стартануть сразу
+      const show = (el) => el.classList.add('in');
+
+      // Если браузер не поддерживает IntersectionObserver — показываем всё
+      if (!('IntersectionObserver' in window)) {
+        els.forEach(show);
+        return;
+      }
+
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            show(e.target);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.15 });
+
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+
 </body>
 </html>
-
