@@ -1,189 +1,143 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Агент и клиент — одна сторона сделки</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Агент и клиент — одна сторона сделки</title>
 
-  <style>
-    :root{
-      --bg:#0f0f12;
-      --bg2:#111;
-      --text:#fff;
-      --muted:rgba(255,255,255,.85);
-      --muted2:rgba(255,255,255,.72);
-      --border:rgba(255,255,255,.18);
-      --accent:#c62828;
-      --shadow:0 30px 80px rgba(0,0,0,.6);
-      --radius:6px;
-    }
+<style>
+:root{
+  --bg:#0f0f12;
+  --bg2:#111;
+  --text:#fff;
+  --muted:rgba(255,255,255,.85);
+  --accent:#c62828;
+  --border:rgba(255,255,255,.18);
+  --shadow:0 30px 80px rgba(0,0,0,.6);
+  --radius:6px;
+}
 
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{
-      background:var(--bg);
-      color:var(--text);
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-      overflow-x:hidden;
-    }
+*{margin:0;padding:0;box-sizing:border-box}
 
-    /* HERO */
-    .hero{
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:80px 40px;
-    }
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+}
 
-    .hero-wrapper{
-      display:flex;
-      align-items:center;
-      max-width:1200px;
-      width:100%;
-      gap:80px;
-    }
+.hero{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:80px 40px;
+}
 
-    /* ---- IMAGE BLOCK ---- */
-    .hero-image-wrap{
-      position:relative;
-      max-width:420px; /* <<< УМЕНЬШИЛ РАЗМЕР */
-      width:100%;
-      will-change:transform;
-      transform:translateY(var(--parallax,0px));
-      transition:transform 220ms ease;
-    }
+.hero-wrapper{
+  display:grid;
+  grid-template-columns: 360px 1fr; /* НОРМАЛЬНЫЙ размер */
+  gap:80px;
+  max-width:1100px;
+  width:100%;
+  align-items:center;
+}
 
-    .hero-image-wrap::after{
-      /* мягкое затемнение → свет */
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,0) 45%);
-      pointer-events:none;
-      opacity:0;
-      transition:opacity 1600ms ease;
-    }
+.hero-image-wrap{
+  position:relative;
+}
 
-    .hero-image-wrap.in::after{
-      opacity:1;
-    }
+.hero-image-wrap::before{
+  content:"";
+  position:absolute;
+  top:8%;
+  bottom:8%;
+  left:50%;
+  width:2px;
+  background:rgba(255,255,255,.7);
+  transform:translateX(-50%);
+}
 
-    .hero-image-wrap::before{
-      /* белая мягкая разделительная линия */
-      content:"";
-      position:absolute;
-      top:6%;
-      bottom:6%;
-      left:50%;
-      width:2px;
-      background:rgba(255,255,255,.75);
-      border-radius:2px;
-      transform:translateX(-50%) scaleY(.6);
-      opacity:0;
-      transition:opacity 2000ms ease, transform 2000ms ease;
-    }
+.hero-image-wrap img{
+  width:100%;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  display:block;
+}
 
-    .hero-image-wrap.in::before{
-      opacity:1;
-      transform:translateX(-50%) scaleY(1);
-    }
+/* ТЕКСТ */
+.hero-content h1{
+  font-size:44px;
+  line-height:1.15;
+  margin-bottom:22px;
+}
 
-    .hero-image img{
-      width:100%;
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      display:block;
-      will-change:opacity,transform,filter;
-    }
+.hero-content p{
+  font-size:18px;
+  line-height:1.6;
+  color:var(--muted);
+  margin-bottom:32px;
+}
 
-    .hero-content{max-width:540px}
+.buttons{
+  display:flex;
+  gap:16px;
+}
 
-    h1{
-      font-size:48px;
-      line-height:1.15;
-      margin-bottom:22px;
-      letter-spacing:-0.5px;
-    }
+.btn{
+  padding:14px 28px;
+  border-radius:4px;
+  text-decoration:none;
+  font-weight:600;
+  transition:.2s;
+}
 
-    p{
-      font-size:18px;
-      line-height:1.6;
-      color:var(--muted);
-      margin-bottom:34px;
-    }
+.btn-primary{
+  background:var(--accent);
+  color:#fff;
+}
 
-    .buttons{display:flex;gap:16px;flex-wrap:wrap}
+.btn-primary:hover{transform:translateY(-1px)}
 
-    .btn{
-      padding:14px 28px;
-      border-radius:4px;
-      text-decoration:none;
-      font-weight:600;
-      transition:transform .2s ease, background .2s ease;
-      display:inline-block;
-    }
+.btn-secondary{
+  border:1px solid var(--border);
+  color:#fff;
+  opacity:.85;
+}
 
-    .btn-primary{background:var(--accent);color:#fff}
-    .btn-primary:hover{transform:translateY(-1px)}
-    .btn-secondary{border:1px solid var(--border);color:#fff;opacity:.9}
-    .btn-secondary:hover{border-color:rgba(255,255,255,.35);transform:translateY(-1px)}
+/* АНИМАЦИЯ */
+.reveal{
+  opacity:0;
+  transform:translateY(12px);
+  transition:opacity .6s ease, transform .6s ease;
+}
 
-    /* ABOUT */
-    .about{
-      padding:110px 40px;
-      background:var(--bg2);
-    }
+.reveal.in{
+  opacity:1;
+  transform:none;
+}
 
-    .about-inner{
-      max-width:920px;
-      margin:0 auto;
-      text-align:center;
-    }
+.reveal-photo{
+  opacity:0;
+  transform:translateY(20px) scale(.97);
+  filter:blur(10px);
+  transition:opacity 3s ease, transform 3s ease, filter 3s ease;
+}
 
-    .about h2{
-      font-size:36px;
-      margin-bottom:20px;
-    }
+.reveal-photo.in{
+  opacity:1;
+  transform:none;
+  filter:none;
+}
 
-    .about p{color:var(--muted2)}
-
-    /* TEXT — быстрее */
-    .reveal{
-      opacity:0;
-      transform:translateY(14px);
-      filter:blur(4px);
-      transition:
-        opacity 650ms cubic-bezier(.2,.8,.2,1),
-        transform 650ms cubic-bezier(.2,.8,.2,1),
-        filter 650ms cubic-bezier(.2,.8,.2,1);
-    }
-    .reveal.in{opacity:1;transform:none;filter:none}
-
-    /* PHOTO — медленно */
-    .reveal-photo{
-      opacity:0;
-      transform:translateY(22px) scale(.97);
-      filter:blur(14px);
-      transition:
-        opacity 3000ms cubic-bezier(.2,.8,.2,1),
-        transform 3000ms cubic-bezier(.2,.8,.2,1),
-        filter 3000ms cubic-bezier(.2,.8,.2,1);
-    }
-    .reveal-photo.in{opacity:1;transform:none;filter:none}
-
-    .d1{transition-delay:120ms}
-    .d2{transition-delay:220ms}
-    .d3{transition-delay:340ms}
-    .d4{transition-delay:460ms}
-
-    @media(max-width:900px){
-      .hero{padding:60px 20px}
-      .hero-wrapper{flex-direction:column;text-align:center;gap:46px}
-      h1{font-size:36px}
-      .hero-image-wrap{max-width:360px}
-      .about{padding:80px 20px}
-    }
-  </style>
+@media(max-width:900px){
+  .hero-wrapper{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+  .hero-image-wrap{max-width:300px;margin:0 auto}
+  .buttons{justify-content:center}
+}
+</style>
 </head>
 
 <body>
@@ -191,68 +145,36 @@
 <section class="hero">
   <div class="hero-wrapper">
 
-    <div id="imageWrap" class="hero-image-wrap">
-      <img id="heroPhoto" class="reveal-photo d1" src="hero.jpg" alt="Агент и клиент — одна сторона сделки">
+    <div class="hero-image-wrap">
+      <img id="heroPhoto" class="reveal-photo" src="hero.jpg" alt="">
     </div>
 
     <div class="hero-content">
-      <h1 class="reveal d2">Агент и клиент — одна сторона сделки</h1>
-      <p class="reveal d3">
+      <h1 class="reveal">Агент и клиент — одна сторона сделки</h1>
+      <p class="reveal">
         Недвижимость без конфликта интересов.<br>
-        Я работаю так, как будто совершаю сделку для себя.
+        Я действую так, как если бы покупал или продавал для себя.
       </p>
-      <div class="buttons reveal d4">
+      <div class="buttons reveal">
         <a href="#" class="btn btn-primary">Обсудить задачу</a>
-        <a href="#about" class="btn btn-secondary">Мой подход</a>
+        <a href="#" class="btn btn-secondary">Мой подход</a>
       </div>
     </div>
 
   </div>
 </section>
 
-<section class="about" id="about">
-  <div class="about-inner">
-    <h2 class="reveal">Партнёрство, а не давление</h2>
-    <p class="reveal">
-      Агент и клиент — не по разные стороны сделки.<br>
-      Это единая команда с общей целью и общим результатом.
-    </p>
-  </div>
-</section>
-
 <script>
-/* Текст */
-(function(){
-  const els=document.querySelectorAll('.reveal');
-  const io=new IntersectionObserver(es=>{
-    es.forEach(e=>{
-      if(e.isIntersecting){
-        e.target.classList.add('in');
-        io.unobserve(e.target);
-      }
-    });
-  },{threshold:.15});
-  els.forEach(el=>io.observe(el));
-})();
+const reveals=document.querySelectorAll('.reveal');
+reveals.forEach(el=>setTimeout(()=>el.classList.add('in'),300));
 
-/* Фото + эффекты */
-(function(){
-  const img=document.getElementById('heroPhoto');
-  const wrap=document.getElementById('imageWrap');
-  if(!img||!wrap) return;
-
-  function start(){
-    requestAnimationFrame(()=>{
-      setTimeout(()=>{
-        img.classList.add('in');
-        wrap.classList.add('in');
-      },180);
-    });
-  }
-
-  if(img.complete) start();
-  else img.addEventListener('load',start,{once:true});
-})();
+const img=document.getElementById('heroPhoto');
+function start(){
+  requestAnimationFrame(()=>{
+    setTimeout(()=>img.classList.add('in'),200);
+  });
+}
+if(img.complete) start(); else img.onload=start;
 </script>
 
 </body>
