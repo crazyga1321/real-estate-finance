@@ -4,178 +4,113 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Агент и клиент — одна сторона сделки</title>
-
 <style>
 :root{
-  --bg:#0f0f12;
-  --bg2:#111;
-  --text:#fff;
-  --muted:rgba(255,255,255,.85);
-  --accent:#c62828;
-  --border:rgba(255,255,255,.18);
-  --shadow:0 30px 80px rgba(0,0,0,.6);
-  --radius:6px;
+  --bg-hero:#f4efe9;
+  --bg-dark:#0f0f12;
+  --text-dark:#1c1c1c;
+  --text-muted:#5f5b55;
+  --text-light:#ffffff;
+  --accent:#8f2d2d;
+  --border:rgba(0,0,0,.12);
+  --shadow:0 30px 80px rgba(0,0,0,.25);
 }
-
 *{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
 
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-}
-
+/* HERO */
 .hero{
   min-height:100vh;
+  background:var(--bg-hero);
   display:flex;
   align-items:center;
   justify-content:center;
   padding:80px 40px;
 }
-
 .hero-wrapper{
-  display:grid;
-  grid-template-columns: 360px 1fr; /* НОРМАЛЬНЫЙ размер */
-  gap:80px;
   max-width:1100px;
   width:100%;
+  display:grid;
+  grid-template-columns:360px 1fr;
+  gap:80px;
   align-items:center;
 }
-
-.hero-image-wrap{
-  position:relative;
-}
-
-.hero-image-wrap::before{
-  content:"";
-  position:absolute;
-  top:8%;
-  bottom:8%;
-  left:50%;
-  width:2px;
-  background:rgba(255,255,255,.7);
-  transform:translateX(-50%);
-}
-
-.hero-image-wrap img{
+.hero-image img{
   width:100%;
-  border-radius:var(--radius);
+  border-radius:6px;
   box-shadow:var(--shadow);
-  display:block;
 }
-
-/* ТЕКСТ */
-.hero-content h1{
+.hero h1{
   font-size:44px;
   line-height:1.15;
+  color:var(--text-dark);
   margin-bottom:22px;
 }
-
-.hero-content p{
+.hero p{
   font-size:18px;
   line-height:1.6;
-  color:var(--muted);
+  color:var(--text-muted);
   margin-bottom:32px;
 }
-
-.buttons{
-  display:flex;
-  gap:16px;
-}
-
 .btn{
   padding:14px 28px;
   border-radius:4px;
   text-decoration:none;
   font-weight:600;
-  transition:.2s;
+  display:inline-block;
 }
-
 .btn-primary{
   background:var(--accent);
   color:#fff;
 }
 
-.btn-primary:hover{transform:translateY(-1px)}
-
-.btn-secondary{
-  border:1px solid var(--border);
-  color:#fff;
+/* ABOUT */
+.about{
+  background:var(--bg-dark);
+  color:var(--text-light);
+  padding:120px 40px;
+}
+.about-inner{
+  max-width:900px;
+  margin:0 auto;
+  text-align:center;
+}
+.about h2{
+  font-size:36px;
+  margin-bottom:24px;
+}
+.about p{
+  font-size:18px;
   opacity:.85;
 }
 
-/* АНИМАЦИЯ */
-.reveal{
-  opacity:0;
-  transform:translateY(12px);
-  transition:opacity .6s ease, transform .6s ease;
-}
-
-.reveal.in{
-  opacity:1;
-  transform:none;
-}
-
-.reveal-photo{
-  opacity:0;
-  transform:translateY(20px) scale(.97);
-  filter:blur(10px);
-  transition:opacity 3s ease, transform 3s ease, filter 3s ease;
-}
-
-.reveal-photo.in{
-  opacity:1;
-  transform:none;
-  filter:none;
-}
-
 @media(max-width:900px){
-  .hero-wrapper{
-    grid-template-columns:1fr;
-    text-align:center;
-  }
-  .hero-image-wrap{max-width:300px;margin:0 auto}
-  .buttons{justify-content:center}
+  .hero-wrapper{grid-template-columns:1fr;text-align:center}
+  .hero-image{max-width:300px;margin:0 auto}
 }
 </style>
 </head>
-
 <body>
 
 <section class="hero">
   <div class="hero-wrapper">
-
-    <div class="hero-image-wrap">
-      <img id="heroPhoto" class="reveal-photo" src="hero.jpg" alt="">
+    <div class="hero-image">
+      <img src="hero.jpg" alt="">
     </div>
-
-    <div class="hero-content">
-      <h1 class="reveal">Агент и клиент — одна сторона сделки</h1>
-      <p class="reveal">
-        Недвижимость без конфликта интересов.<br>
-        Я действую так, как если бы покупал или продавал для себя.
-      </p>
-      <div class="buttons reveal">
-        <a href="#" class="btn btn-primary">Обсудить задачу</a>
-        <a href="#" class="btn btn-secondary">Мой подход</a>
-      </div>
+    <div>
+      <h1>Агент и клиент — одна сторона сделки</h1>
+      <p>Недвижимость без конфликта интересов.<br>Я действую так, как если бы покупал для себя.</p>
+      <a class="btn btn-primary" href="#">Обсудить задачу</a>
     </div>
-
   </div>
 </section>
 
-<script>
-const reveals=document.querySelectorAll('.reveal');
-reveals.forEach(el=>setTimeout(()=>el.classList.add('in'),300));
-
-const img=document.getElementById('heroPhoto');
-function start(){
-  requestAnimationFrame(()=>{
-    setTimeout(()=>img.classList.add('in'),200);
-  });
-}
-if(img.complete) start(); else img.onload=start;
-</script>
+<section class="about">
+  <div class="about-inner">
+    <h2>Партнёрство вместо давления</h2>
+    <p>Я не продаю объекты. Я помогаю принимать взвешенные решения и защищаю интересы клиента.</p>
+  </div>
+</section>
 
 </body>
 </html>
