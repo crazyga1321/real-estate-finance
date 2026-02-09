@@ -6,22 +6,24 @@
 <title>Агент и клиент — одна сторона сделки</title>
 <style>
 :root{
-  --bg-hero:#f4efe9;
-  --bg-dark:#0f0f12;
+  --bg-main:#f4efe9;
+  --bg-soft:#ede7df;
   --text-dark:#1c1c1c;
   --text-muted:#5f5b55;
-  --text-light:#ffffff;
   --accent:#8f2d2d;
   --border:rgba(0,0,0,.12);
   --shadow:0 30px 80px rgba(0,0,0,.25);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+body{
+  background:var(--bg-main);
+  color:var(--text-dark);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+}
 
 /* HERO */
 .hero{
   min-height:100vh;
-  background:var(--bg-hero);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -43,7 +45,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
 .hero h1{
   font-size:44px;
   line-height:1.15;
-  color:var(--text-dark);
   margin-bottom:22px;
 }
 .hero p{
@@ -66,8 +67,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
 
 /* ABOUT */
 .about{
-  background:var(--bg-dark);
-  color:var(--text-light);
+  background:var(--bg-soft);
   padding:120px 40px;
 }
 .about-inner{
@@ -81,7 +81,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
 }
 .about p{
   font-size:18px;
-  opacity:.85;
+  color:var(--text-muted);
 }
 
 @media(max-width:900px){
@@ -108,7 +108,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
 <section class="about">
   <div class="about-inner">
     <h2>Партнёрство вместо давления</h2>
-    <p>Я не продаю объекты. Я помогаю принимать взвешенные решения и защищаю интересы клиента.</p>
+    <p>Агент и клиент — одна команда. Решения принимаются спокойно и прозрачно.</p>
   </div>
 </section>
 
