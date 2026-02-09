@@ -4,111 +4,354 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Агент и клиент — одна сторона сделки</title>
+
 <style>
 :root{
-  --bg-main:#f4efe9;
-  --bg-soft:#ede7df;
+  --bg-hero:#f4efe9;        /* молочно-кофейный */
+  --bg-soft:#ede7df;        /* мягкий светлый */
+  --bg-dark:#141416;        /* тёплый тёмный */
   --text-dark:#1c1c1c;
   --text-muted:#5f5b55;
-  --accent:#8f2d2d;
+  --text-light:#f7f6f4;
+
+  --accent:#8f2d2d;         /* винный */
   --border:rgba(0,0,0,.12);
+  --border-soft:rgba(0,0,0,.08);
   --shadow:0 30px 80px rgba(0,0,0,.25);
+  --radius:10px;
+
+  --max:1100px;
+  --gap:80px;
 }
+
 *{margin:0;padding:0;box-sizing:border-box}
 body{
-  background:var(--bg-main);
-  color:var(--text-dark);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:var(--bg-hero);
+  color:var(--text-dark);
 }
+
+a{color:inherit}
+.container{max-width:var(--max); margin:0 auto; padding:0 40px;}
+.section{padding:120px 0;}
+.section.tight{padding:90px 0;}
+
+.kicker{
+  font-size:12px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:rgba(28,28,28,.55);
+  margin-bottom:14px;
+}
+.h2{
+  font-size:36px;
+  line-height:1.2;
+  margin-bottom:18px;
+  letter-spacing:-.3px;
+}
+.lead{
+  font-size:18px;
+  line-height:1.7;
+  color:var(--text-muted);
+}
+
+/* BUTTONS */
+.buttons{display:flex; gap:14px; flex-wrap:wrap; margin-top:28px;}
+.btn{
+  padding:14px 28px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:600;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  transition:transform .2s ease, background .2s ease, border-color .2s ease, opacity .2s ease;
+  user-select:none;
+}
+.btn-primary{
+  background:var(--accent);
+  color:#fff;
+  border:1px solid transparent;
+}
+.btn-primary:hover{transform:translateY(-1px); opacity:.95;}
+.btn-secondary{
+  border:1px solid var(--border);
+  color:var(--text-dark);
+  background:transparent;
+  opacity:.9;
+}
+.btn-secondary:hover{transform:translateY(-1px); border-color:rgba(0,0,0,.2);}
+.btn-ghost{
+  border:1px solid var(--border-soft);
+  background:rgba(255,255,255,.25);
+}
+.btn-ghost:hover{transform:translateY(-1px); border-color:rgba(0,0,0,.16);}
 
 /* HERO */
 .hero{
   min-height:100vh;
   display:flex;
   align-items:center;
-  justify-content:center;
-  padding:80px 40px;
+  padding:80px 0;
 }
-.hero-wrapper{
-  max-width:1100px;
-  width:100%;
+.hero-grid{
   display:grid;
   grid-template-columns:360px 1fr;
-  gap:80px;
+  gap:var(--gap);
   align-items:center;
+}
+.hero-image{
+  position:relative;
+}
+.hero-image::before{
+  content:"";
+  position:absolute;
+  top:8%;
+  bottom:8%;
+  left:50%;
+  width:2px;
+  background:rgba(255,255,255,.78);
+  transform:translateX(-50%);
+  border-radius:2px;
 }
 .hero-image img{
   width:100%;
-  border-radius:6px;
+  border-radius:var(--radius);
   box-shadow:var(--shadow);
+  display:block;
 }
-.hero h1{
+
+.h1{
   font-size:44px;
   line-height:1.15;
-  margin-bottom:22px;
+  margin-bottom:18px;
+  letter-spacing:-.5px;
 }
 .hero p{
   font-size:18px;
   line-height:1.6;
   color:var(--text-muted);
-  margin-bottom:32px;
-}
-.btn{
-  padding:14px 28px;
-  border-radius:4px;
-  text-decoration:none;
-  font-weight:600;
-  display:inline-block;
-}
-.btn-primary{
-  background:var(--accent);
-  color:#fff;
+  margin-bottom:6px;
 }
 
-/* ABOUT */
+/* ABOUT (bg-soft) */
 .about{
   background:var(--bg-soft);
-  padding:120px 40px;
-}
-.about-inner{
-  max-width:900px;
-  margin:0 auto;
-  text-align:center;
-}
-.about h2{
-  font-size:36px;
-  margin-bottom:24px;
-}
-.about p{
-  font-size:18px;
-  color:var(--text-muted);
 }
 
+/* CARDS GRID */
+.grid-3{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:18px;
+  margin-top:34px;
+}
+.card{
+  background:rgba(255,255,255,.45);
+  border:1px solid var(--border-soft);
+  border-radius:16px;
+  padding:22px;
+}
+.card .num{
+  width:38px; height:38px;
+  border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700;
+  background:rgba(143,45,45,.10);
+  color:var(--accent);
+  margin-bottom:14px;
+}
+.card h3{
+  font-size:18px;
+  margin-bottom:10px;
+  letter-spacing:-.2px;
+}
+.card p{
+  color:var(--text-muted);
+  line-height:1.65;
+  font-size:15.5px;
+}
+
+/* CASES */
+.cases .card{
+  background:rgba(255,255,255,.35);
+}
+.tag{
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  font-size:12px;
+  padding:8px 10px;
+  border:1px solid var(--border-soft);
+  border-radius:999px;
+  color:rgba(28,28,28,.65);
+  margin-bottom:14px;
+}
+
+/* FINAL */
+.final{
+  background:var(--bg-dark);
+  color:var(--text-light);
+}
+.final .kicker{color:rgba(247,246,244,.60)}
+.final .h2{color:var(--text-light)}
+.final .lead{color:rgba(247,246,244,.80)}
+.final .btn-secondary{
+  color:var(--text-light);
+  border-color:rgba(255,255,255,.22);
+}
+.final .btn-secondary:hover{border-color:rgba(255,255,255,.35)}
+.final .btn-ghost{
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.18);
+}
+.final .btn-ghost:hover{border-color:rgba(255,255,255,.30)}
+
+/* ANCHORS */
+#contact{scroll-margin-top:80px;}
+#about{scroll-margin-top:80px;}
+#how{scroll-margin-top:80px;}
+#cases{scroll-margin-top:80px;}
+
+/* MOBILE */
 @media(max-width:900px){
-  .hero-wrapper{grid-template-columns:1fr;text-align:center}
-  .hero-image{max-width:300px;margin:0 auto}
+  .container{padding:0 20px;}
+  .hero-grid{grid-template-columns:1fr; text-align:center; gap:46px;}
+  .hero-image{max-width:300px; margin:0 auto;}
+  .buttons{justify-content:center;}
+  .grid-3{grid-template-columns:1fr; gap:14px;}
+  .h1{font-size:36px;}
+  .h2{font-size:30px;}
 }
 </style>
 </head>
+
 <body>
 
-<section class="hero">
-  <div class="hero-wrapper">
-    <div class="hero-image">
-      <img src="hero.jpg" alt="">
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-image">
+        <img src="hero.jpg" alt="Агент и клиент — одна сторона сделки">
+      </div>
+
+      <div>
+        <div class="kicker">Недвижимость • партнёрство • результат</div>
+        <div class="h1">Агент и клиент — одна сторона сделки</div>
+        <p>Недвижимость без конфликта интересов.</p>
+        <p class="lead">Я действую так, как если бы покупал или продавал для себя.</p>
+
+        <div class="buttons">
+          <a class="btn btn-primary" href="#contact">Обсудить задачу</a>
+          <a class="btn btn-secondary" href="#about">Мой подход</a>
+          <a class="btn btn-ghost" href="#how">Как я работаю</a>
+        </div>
+      </div>
     </div>
-    <div>
-      <h1>Агент и клиент — одна сторона сделки</h1>
-      <p>Недвижимость без конфликта интересов.<br>Я действую так, как если бы покупал для себя.</p>
-      <a class="btn btn-primary" href="#">Обсудить задачу</a>
+  </div>
+</header>
+
+<!-- ABOUT -->
+<section class="section about" id="about">
+  <div class="container" style="text-align:center; max-width:900px;">
+    <div class="kicker">Главный принцип</div>
+    <div class="h2">Партнёрство вместо давления</div>
+    <div class="lead">
+      Я не заинтересован в том, чтобы «просто закрыть сделку».
+      Моя задача — чтобы вы были уверены в решении не только сегодня,
+      но и спустя годы.
     </div>
   </div>
 </section>
 
-<section class="about">
-  <div class="about-inner">
-    <h2>Партнёрство вместо давления</h2>
-    <p>Агент и клиент — одна команда. Решения принимаются спокойно и прозрачно.</p>
+<!-- HOW I WORK -->
+<section class="section tight" id="how">
+  <div class="container">
+    <div class="kicker">Прозрачный процесс</div>
+    <div class="h2">Как я работаю</div>
+    <div class="lead" style="max-width:820px;">
+      Всё по шагам: вы понимаете, что происходит, какие есть варианты и почему мы выбираем именно этот путь.
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="num">01</div>
+        <h3>Диагностика</h3>
+        <p>Цель, сроки, бюджет, риски. Собираем вводные и фиксируем критерии, чтобы не «плыть» в процессе.</p>
+      </div>
+
+      <div class="card">
+        <div class="num">02</div>
+        <h3>Проверка и стратегия</h3>
+        <p>Подбор/оценка, юридические и рыночные проверки, сценарии торга. Вы выбираете осознанно, а не на эмоции.</p>
+      </div>
+
+      <div class="card">
+        <div class="num">03</div>
+        <h3>Сделка под контролем</h3>
+        <p>Переговоры, документы, контроль этапов, сопровождение до результата. Максимально спокойно и прозрачно.</p>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <a class="btn btn-primary" href="#contact">Обсудить мою задачу</a>
+    </div>
+  </div>
+</section>
+
+<!-- CASES -->
+<section class="section cases" id="cases" style="background: var(--bg-soft);">
+  <div class="container">
+    <div class="kicker">Практика</div>
+    <div class="h2">Кейсы</div>
+    <div class="lead" style="max-width:820px;">
+      Здесь будут 3–6 коротких кейсов: «задача → что сделали → результат». Пока — аккуратные заглушки.
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="tag">Кейс #1 • покупка</div>
+        <h3>Нашли вариант лучше исходного</h3>
+        <p>Сравнили 2 сценария, отсеяли рискованный объект, вышли на итоговый вариант без переплаты.</p>
+      </div>
+
+      <div class="card">
+        <div class="tag">Кейс #2 • продажа</div>
+        <h3>Сделка без “среза” цены</h3>
+        <p>Подготовка объекта + стратегия показа, переговоры и контроль этапов — без давления на собственника.</p>
+      </div>
+
+      <div class="card">
+        <div class="tag">Кейс #3 • сопровождение</div>
+        <h3>Защитили интересы клиента</h3>
+        <p>Проверка документов и условий, фиксация договорённостей, спокойный проход сделки до регистрации.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="section final" id="contact">
+  <div class="container" style="text-align:center; max-width:920px;">
+    <div class="kicker">Финальный шаг</div>
+    <div class="h2">Недвижимость — это решение, а не эмоция</div>
+    <div class="lead">
+      Если вам близок спокойный партнёрский подход — давайте обсудим вашу задачу.
+      Я скажу честно, чем могу помочь и какой сценарий будет лучшим.
+    </div>
+
+    <div class="buttons" style="justify-content:center;">
+      <!-- ВСТАВЬ СВОИ ССЫЛКИ -->
+      <a class="btn btn-primary" href="tel:+70000000000">Позвонить</a>
+      <a class="btn btn-secondary" href="https://t.me/USERNAME">Telegram</a>
+      <a class="btn btn-ghost" href="https://wa.me/70000000000">WhatsApp</a>
+    </div>
+
+    <div style="margin-top:18px; font-size:12px; opacity:.6;">
+      Подставь свои контакты: телефон, Telegram username, WhatsApp номер.
+    </div>
   </div>
 </section>
 
