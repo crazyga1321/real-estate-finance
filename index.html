@@ -552,20 +552,7 @@ body{
 }
 
 
-/* ===== HERO WOW PACK ===== */
 
-/* stronger dual-tone background with motion */
-.hero{
-  position:relative;
-  background:
-    radial-gradient(1200px 700px at 15% 50%, rgba(30,70,130,.55), transparent 65%),
-    radial-gradient(1200px 700px at 85% 50%, rgba(210,120,120,.45), transparent 65%),
-    linear-gradient(90deg,
-      rgba(25,45,80,.85) 0%,
-      rgba(245,238,230,.95) 48%,
-      rgba(200,105,105,.75) 100%);
-  animation: heroShift 14s ease-in-out infinite;
-}
 
 @keyframes heroShift{
   0%{
@@ -628,6 +615,58 @@ body{
 @keyframes heroIn{
   from{opacity:0; transform:translateY(18px)}
   to{opacity:1; transform:translateY(0)}
+}
+
+
+/* ===== HERO LIVE BACKGROUND (REAL MOTION) ===== */
+.hero{
+  position: relative;
+  background:
+    radial-gradient(1200px 800px at 20% 50%, rgba(30,70,130,.60), transparent 60%),
+    radial-gradient(1200px 800px at 80% 50%, rgba(210,120,120,.48), transparent 60%),
+    linear-gradient(
+      90deg,
+      rgba(25,45,80,.92),
+      rgba(245,238,230,.96),
+      rgba(200,105,105,.82)
+    );
+  background-size: 160% 160%;
+  animation: heroFloat 18s ease-in-out infinite;
+}
+
+@keyframes heroFloat{
+  0%{ background-position: 0% 50%; }
+  50%{ background-position: 100% 50%; }
+  100%{ background-position: 0% 50%; }
+}
+
+/* cinematic vignette */
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(0,0,0,.22) 100%);
+  pointer-events:none;
+}
+
+/* divider glow */
+.hero-image::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,
+      transparent 48%,
+      rgba(255,255,255,.65) 50%,
+      transparent 52%);
+  opacity:.85;
+  animation: linePulse 4.5s ease-in-out infinite;
+  pointer-events:none;
+}
+
+@keyframes linePulse{
+  0%,100%{opacity:.35}
+  50%{opacity:.95}
 }
 
 </style>
@@ -799,7 +838,7 @@ body{
       </div>
 
       <div class="buttons reveal" data-reveal style="justify-content:center;">
-        <a class="btn btn-primary" href="tel:+79253248861"><span class="btn-icon">☎</span> Позвонить</a>
+        <a class="btn btn-primary" href="tel:+70000000000"><span class="btn-icon">☎</span> Позвонить</a>
         <a class="btn btn-secondary" href="#"><span class="btn-icon">✉</span> Telegram</a>
       </div>
 
