@@ -1,1006 +1,184 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Агент и клиент — одна сторона сделки</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Недвижимость как инструмент капитала</title>
 
 <style>
-:root{
-  --hero:#f4efe9;
-  --soft:#efe6dd;         /* контрастнее, чем раньше */
-  --paper:rgba(255,255,255,.62);
-  --paper2:rgba(255,255,255,.42);
-  --dark:#141416;
-
-  --text:#1c1c1c;
-  --muted:#5f5b55;
-  --light:#f7f6f4;
-
-  --accent:#8f2d2d;       /* винный */
-  --accent2:#b54a4a;      /* чуть “глянцевее” */
-  --line:rgba(0,0,0,.08);
-
-  --shadow:0 26px 70px rgba(0,0,0,.18);
-  --shadow2:0 16px 40px rgba(0,0,0,.12);
-  --r:14px;
-
-  --max:1120px;
-}
-
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  color:var(--text);
-  background:var(--hero);
-
-  overflow-x:hidden;
-}
-
-/* layout */
-.container{max-width:var(--max); margin:0 auto; padding:0 40px;}
-.section{padding:110px 0; border-top:1px solid var(--line);}
-.section:first-of-type{border-top:none;}
-.soft{background:var(--soft);}
-.dark{background:var(--dark); color:var(--light);}
-.dark .muted{color:rgba(247,246,244,.78);}
-
-.h1{font-size:46px; line-height:1.12; letter-spacing:-.7px;}
-.h2{font-size:36px; line-height:1.18; letter-spacing:-.4px;}
-.p{font-size:18px; line-height:1.72;}
-.muted{color:var(--muted);}
-
-.kicker{
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  padding:8px 12px;
-  border:1px solid var(--line);
-  border-radius:999px;
-  background:rgba(255,255,255,.25);
-  font-size:12px;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  color:rgba(28,28,28,.65);
-  margin-bottom:16px;
-}
-
-/* hero */
-.hero{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  padding:80px 0;
-  position:relative;
-  border-top:none;
-  background:
-    radial-gradient(900px 520px at 20% 20%, rgba(181,74,74,.10), transparent 60%),
-    radial-gradient(900px 520px at 85% 35%, rgba(143,45,45,.08), transparent 60%),
-    linear-gradient(180deg, #f7f3ee 0%, var(--hero) 55%, var(--hero) 100%);
-}
-
-.hero-grid{
-  display:grid;
-  grid-template-columns:360px 1fr;
-  gap:78px;
-  align-items:center;
-}
-
-.hero-image{
-  position:relative;
-  border-radius:var(--r);
-}
-.hero-image::before{
-  content:"";
-  position:absolute;
-  top:8%;
-  bottom:8%;
-  left:50%;
-  width:2px;
-  background:rgba(255,255,255,.82);
-  transform:translateX(-50%);
-  border-radius:2px;
-}
-.hero-image img{
-  width:100%;
-  display:block;
-  border-radius:var(--r);
-  box-shadow:var(--shadow);
-}
-
-.hero-copy{max-width:640px;}
-.hero-sub{
-  margin-top:16px;
-  max-width:620px;
-}
-.hero-sub strong{
-  color:var(--text);
-  font-weight:800;
-}
-
-/* buttons */
-.buttons{display:flex; gap:14px; flex-wrap:wrap; margin-top:28px;}
-.btn{
-  padding:14px 18px;
-  border-radius:12px;
-  font-weight:700;
-  text-decoration:none;
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  transition:transform .18s ease, opacity .18s ease, border-color .18s ease;
-  user-select:none;
-}
-.btn:hover{transform:translateY(-1px)}
-.btn-primary{
-  background:linear-gradient(180deg, var(--accent2), var(--accent));
-  color:#fff;
-  box-shadow:0 14px 28px rgba(143,45,45,.18);
-}
-.btn-secondary{
-  border:1px solid rgba(0,0,0,.14);
-  background:rgba(255,255,255,.35);
-  color:var(--text);
-}
-.btn-icon{
-  width:26px; height:26px;
-  border-radius:9px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(255,255,255,.22);
-  border:1px solid rgba(255,255,255,.18);
-}
-
-/* blocks */
-.center{max-width:920px; margin:0 auto; text-align:center;}
-.stack{margin-top:28px;}
-.hr{height:1px; background:var(--line); margin:28px 0;}
-
-.grid3{
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
-  gap:16px;
-  margin-top:30px;
-}
-
-.card{
-  background:var(--paper);
-  border:1px solid rgba(0,0,0,.08);
-  border-radius:18px;
-  padding:22px;
-  box-shadow:var(--shadow2);
-  backdrop-filter: blur(6px);
-}
-.card h3{font-size:18px; letter-spacing:-.2px; margin-bottom:10px;}
-.card p{font-size:15.5px; line-height:1.65; color:var(--muted);}
-
-.num{
-  width:40px; height:40px;
-  border-radius:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:900;
-  color:var(--accent);
-  background:rgba(143,45,45,.12);
-  border:1px solid rgba(143,45,45,.16);
-  margin-bottom:12px;
-}
-
-.bullets{
-  margin-top:18px;
-  display:grid;
-  gap:10px;
-  max-width:760px;
-}
-.bullets li{
-  list-style:none;
-  padding-left:18px;
-  position:relative;
-  color:var(--muted);
-  line-height:1.65;
-}
-.bullets li::before{
-  content:"";
-  position:absolute;
-  left:0; top:.72em;
-  width:8px; height:8px;
-  border-radius:99px;
-  background:rgba(143,45,45,.35);
-}
-
-/* highlight quote */
-.quote{
-  background:
-    radial-gradient(520px 240px at 30% 20%, rgba(181,74,74,.10), transparent 70%),
-    var(--paper2);
-  border:1px solid rgba(0,0,0,.08);
-  border-radius:22px;
-  padding:26px;
-  box-shadow:var(--shadow2);
-}
-.quote .mark{
-  font-size:44px; line-height:1;
-  color:rgba(143,45,45,.35);
-  font-weight:900;
-  margin-bottom:6px;
-}
-.quote p{color:var(--muted);}
-
-/* dark section buttons */
-.dark .btn-secondary{
-  background:rgba(255,255,255,.06);
-  border-color:rgba(255,255,255,.18);
-  color:var(--light);
-}
-.dark .kicker{
-  background:rgba(255,255,255,.06);
-  border-color:rgba(255,255,255,.14);
-  color:rgba(247,246,244,.70);
-}
-
-/* reveal animation */
-.reveal{
-  opacity:0;
-  transform:translateY(14px);
-  filter: blur(6px);
-  transition: opacity .75s ease, transform .75s ease, filter .75s ease;
-}
-.reveal.in{
-  opacity:1;
-  transform:none;
-  filter:none;
-}
-.reveal.slow{
-  transition-duration: 1.05s;
-}
-
-/* mobile */
-@media(max-width:920px){
-  .container{padding:0 20px;}
-  .hero-grid{grid-template-columns:1fr; gap:42px; text-align:center;}
-  .hero-image{max-width:300px; margin:0 auto;}
-  .hero-copy{max-width:unset;}
-  .grid3{grid-template-columns:1fr;}
-  .buttons{justify-content:center;}
-  .h1{font-size:38px;}
-  .h2{font-size:30px;}
-  .section{padding:86px 0;}
-}
-
-/* top navigation */
-.topbar{
-  position:sticky;
-  top:0;
-  z-index:50;
-  backdrop-filter: blur(10px);
-  background:rgba(244,239,233,.65);
-  border-bottom:1px solid rgba(0,0,0,.06);
-}
-.nav{
-  max-width:var(--max);
-  margin:0 auto;
-  padding:14px 40px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:18px;
-}
-.brand{
-  font-weight:900;
-  letter-spacing:-.3px;
-}
-.brand span{
-  color:var(--accent);
-}
-.navlinks{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:flex-end;
-}
-.navlinks a{
-  text-decoration:none;
-  font-weight:700;
-  font-size:13px;
-  padding:10px 12px;
-  border-radius:999px;
-  border:1px solid rgba(0,0,0,.10);
-  background:rgba(255,255,255,.25);
-  color:rgba(28,28,28,.85);
-  transition:transform .18s ease, border-color .18s ease, background .18s ease, opacity .18s ease;
-}
-.navlinks a:hover{
-  transform:translateY(-1px);
-  border-color:rgba(0,0,0,.18);
-  background:rgba(255,255,255,.35);
-}
-.navcta{
-  display:inline-flex;
-  gap:10px;
-  align-items:center;
-}
-@media(max-width:920px){
-  .nav{padding:12px 20px;}
-  .navlinks{display:none;}
-}
-
-/* anchor offsets */
-#about,#capital,#closure,#how,#contact{scroll-margin-top:84px;}
-
-/* premium photo accent */
-.hero-image{
-  position:relative;
-  border-radius:var(--r);
-  padding:10px;
-  background:
-    radial-gradient(220px 160px at 25% 18%, rgba(255,255,255,.55), transparent 62%),
-    radial-gradient(320px 220px at 80% 35%, rgba(181,74,74,.18), transparent 65%),
-    rgba(255,255,255,.22);
-  border:1px solid rgba(0,0,0,.08);
-  box-shadow: var(--shadow2);
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0e0e0e;
+    color: #fff;
 }
-.hero-image::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:calc(var(--r) + 2px);
-  pointer-events:none;
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,.35) inset,
-    0 28px 80px rgba(143,45,45,.08);
-  opacity:1;
-}
-.hero-image img{
-  border-radius:calc(var(--r) - 2px);
-  box-shadow:var(--shadow);
-}
-
-
-/* ---- production glow pack (tasteful) ---- */
-:root{
-  --glow-red: rgba(181,74,74,.22);
-  --glow-white: rgba(255,255,255,.55);
-}
-
-/* ambient vignette (subtle) */
-.hero{ position:relative; }
-.hero::after{
-  content:"";
-  position:absolute;
-  inset:-120px -120px -60px -120px;
-  pointer-events:none;
-  background:
-    radial-gradient(900px 600px at 15% 20%, rgba(255,255,255,.32), transparent 62%),
-    radial-gradient(900px 600px at 85% 30%, rgba(181,74,74,.16), transparent 60%),
-    radial-gradient(900px 700px at 50% 110%, rgba(0,0,0,.06), transparent 55%);
-  opacity:.9;
-}
-
-/* hero photo: deeper + soft glow edge */
-.hero-image{
-  box-shadow:
-    0 16px 42px rgba(0,0,0,.10),
-    0 40px 120px rgba(143,45,45,.10);
-}
-.hero-image::after{
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,.36) inset,
-    0 28px 90px rgba(143,45,45,.10),
-    0 0 56px rgba(181,74,74,.10);
-}
-.hero-image img{
-  filter: drop-shadow(0 24px 70px rgba(0,0,0,.16));
-}
-
-/* cards: more depth + glow on hover */
-.card{
-  box-shadow:
-    0 12px 30px rgba(0,0,0,.10),
-    0 28px 90px rgba(0,0,0,.06);
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-.card:hover{
-  transform: translateY(-2px);
-  border-color: rgba(143,45,45,.18);
-  box-shadow:
-    0 18px 44px rgba(0,0,0,.12),
-    0 40px 140px rgba(143,45,45,.10),
-    0 0 44px rgba(181,74,74,.10);
-}
-
-/* buttons: glossy glow */
-.btn-primary{
-  box-shadow:
-    0 14px 28px rgba(143,45,45,.18),
-    0 0 28px rgba(181,74,74,.12);
-}
-.btn-primary:hover{
-  box-shadow:
-    0 18px 36px rgba(143,45,45,.22),
-    0 0 40px rgba(181,74,74,.18);
-}
-.btn-secondary:hover{
-  box-shadow:
-    0 10px 22px rgba(0,0,0,.08),
-    0 0 22px rgba(255,255,255,.22);
-}
-
-/* quote: a little more “studio light” */
-.quote{
-  box-shadow:
-    0 16px 44px rgba(0,0,0,.10),
-    0 40px 140px rgba(143,45,45,.08);
-}
-
-
-/* --- RealGrow logo --- */
-.logo{
-  font-weight:900;
-  letter-spacing:-.4px;
-  font-size:18px;
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-.logo span{
-  background: linear-gradient(120deg, #8f2d2d, #c35a5a, #8f2d2d);
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: shimmer 6s ease-in-out infinite;
-}
-@keyframes shimmer{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
-
-
-/* --- RealGrow logo (stronger, visible shimmer) --- */
-.logo{
-  font-weight:900;
-  letter-spacing:-.4px;
-  font-size:18px;
-  display:flex;
-  align-items:baseline;
-  gap:10px;
-  position:relative;
-}
-.logo .rg{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-}
-.logo .mark{
-  width:10px; height:10px;
-  border-radius:999px;
-  background:linear-gradient(120deg, #8f2d2d, #ffb4b4, #8f2d2d);
-  background-size:220% 220%;
-  box-shadow:0 0 0 1px rgba(0,0,0,.08), 0 0 18px rgba(181,74,74,.28);
-  animation: shimmerFast 2.6s ease-in-out infinite, pulse 1.8s ease-in-out infinite;
-}
-.logo .title{
-  color:rgba(28,28,28,.92);
-}
-.logo .tag{
-  font-weight:800;
-  background: linear-gradient(110deg, #8f2d2d 0%, #ffb9b9 35%, #8f2d2d 70%, #ffb9b9 100%);
-  background-size: 300% 100%;
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-  animation: shimmerLine 2.8s linear infinite;
-  text-shadow: 0 10px 22px rgba(143,45,45,.10);
-  position:relative;
-}
-.logo::after{
-  content:"";
-  position:absolute;
-  left:0;
-  bottom:-10px;
-  width:100%;
-  height:2px;
-  border-radius:999px;
-  background:linear-gradient(90deg, rgba(143,45,45,.0), rgba(143,45,45,.55), rgba(255,185,185,.85), rgba(143,45,45,.55), rgba(143,45,45,.0));
-  background-size:200% 100%;
-  animation: shimmerUnderline 2.6s linear infinite;
-  opacity:.85;
-}
-@keyframes shimmerLine{
-  0%{background-position:0% 50%}
-  100%{background-position:300% 50%}
-}
-@keyframes shimmerUnderline{
-  0%{background-position:0% 50%}
-  100%{background-position:200% 50%}
-}
-@keyframes shimmerFast{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
-@keyframes pulse{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.18)}
-}
-@media (prefers-reduced-motion: reduce){
-  .logo .tag, .logo::after, .logo .mark{animation:none !important}
-}
-
-
-.nav-contact{
-  font-weight:700;
-  text-decoration:none;
-  padding:8px 12px;
-  border-radius:999px;
-  color:rgba(28,28,28,.85);
-}
-.nav-contact:hover{opacity:.75}
-
-
-/* --- Hero dual-tone (blue → soft red) --- */
-.hero{
-  background:
-    radial-gradient(900px 600px at 20% 50%, rgba(46,74,120,.35), transparent 60%),
-    radial-gradient(900px 600px at 80% 50%, rgba(190, 90, 90, .28), transparent 60%),
-    linear-gradient(90deg,
-      rgba(32,58,95,.55) 0%,
-      rgba(245,239,231,.75) 45%,
-      rgba(210,110,110,.45) 100%);
-}
-
-
-
 
-@keyframes heroShift{
-  0%{
-    background-position: 0% 50%, 100% 50%, 50% 50%;
-    filter: contrast(1.05) saturate(1.05);
-  }
-  50%{
-    background-position: 5% 48%, 95% 52%, 50% 50%;
-    filter: contrast(1.18) saturate(1.15);
-  }
-  100%{
-    background-position: 0% 50%, 100% 50%, 50% 50%;
-    filter: contrast(1.05) saturate(1.05);
-  }
+/* HERO */
+.hero {
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(180deg, #111, #1a1a1a);
 }
-
-/* cinematic vignette */
-.hero::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(0,0,0,.18) 100%);
-  pointer-events:none;
+.hero h1 {
+    font-size: 42px;
+    max-width: 800px;
 }
 
-/* hero text pop */
-.hero h1{
-  color:#161616;
-  text-shadow:0 18px 40px rgba(0,0,0,.18);
-}
-.hero .lead{
-  color:rgba(10,10,10,.88);
+/* INVEST SECTION */
+.capital {
+    padding: 80px 20px;
+    background: linear-gradient(180deg, #111, #000);
+    text-align: center;
 }
 
-/* photo divider glow */
-.hero-image::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    linear-gradient(90deg,
-      transparent 48%,
-      rgba(255,255,255,.55) 50%,
-      transparent 52%);
-  mix-blend-mode:overlay;
-  opacity:.75;
-  animation: linePulse 4.5s ease-in-out infinite;
-  pointer-events:none;
+.capital h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
 }
 
-@keyframes linePulse{
-  0%,100%{opacity:.35}
-  50%{opacity:.85}
+.capital p.subtitle {
+    opacity: 0.8;
+    margin-bottom: 40px;
 }
 
-/* hero content entrance */
-.hero .content{
-  animation: heroIn 1.6s ease-out both;
+.capital-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto 40px;
 }
-@keyframes heroIn{
-  from{opacity:0; transform:translateY(18px)}
-  to{opacity:1; transform:translateY(0)}
-}
-
 
-/* ===== HERO LIVE BACKGROUND (REAL MOTION) ===== */
-.hero{
-  position: relative;
-  background:
-    radial-gradient(1200px 800px at 20% 50%, rgba(30,70,130,.60), transparent 60%),
-    radial-gradient(1200px 800px at 80% 50%, rgba(210,120,120,.48), transparent 60%),
-    linear-gradient(
-      90deg,
-      rgba(25,45,80,.92),
-      rgba(245,238,230,.96),
-      rgba(200,105,105,.82)
-    );
-  background-size: 160% 160%;
-  animation: heroFloat 18s ease-in-out infinite;
+.card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 20px;
 }
 
-@keyframes heroFloat{
-  0%{ background-position: 0% 50%; }
-  50%{ background-position: 100% 50%; }
-  100%{ background-position: 0% 50%; }
+.card h3 {
+    margin-top: 0;
+    font-size: 18px;
 }
 
-/* cinematic vignette */
-.hero::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(0,0,0,.22) 100%);
-  pointer-events:none;
+.cta-button {
+    background: #d4a74a;
+    color: #000;
+    padding: 16px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 20px;
 }
 
-/* divider glow */
-.hero-image::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    linear-gradient(90deg,
-      transparent 48%,
-      rgba(255,255,255,.65) 50%,
-      transparent 52%);
-  opacity:.85;
-  animation: linePulse 4.5s ease-in-out infinite;
-  pointer-events:none;
+.note {
+    font-size: 13px;
+    opacity: 0.7;
+    margin-top: 25px;
 }
 
-@keyframes linePulse{
-  0%,100%{opacity:.35}
-  50%{opacity:.95}
+/* CALCULATOR */
+.calculator {
+    padding: 80px 20px;
+    text-align: center;
+    background: #111;
 }
 
-
-/* ===== Ambient Sound Toggle ===== */
-.sound-toggle{
-  position:fixed;
-  right:24px;
-  bottom:24px;
-  z-index:90;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:12px 16px;
-  border-radius:999px;
-  background:rgba(255,255,255,.75);
-  backdrop-filter: blur(10px);
-  border:1px solid rgba(0,0,0,.12);
-  box-shadow:0 18px 40px rgba(0,0,0,.12);
-  font-weight:700;
-  cursor:pointer;
-  transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;
-}
-.sound-toggle:hover{
-  transform:translateY(-2px);
-  box-shadow:0 24px 60px rgba(0,0,0,.18);
+.calculator input {
+    padding: 12px;
+    width: 250px;
+    font-size: 16px;
+    margin-bottom: 20px;
 }
-.sound-toggle .icon{
-  width:20px;
-  height:20px;
-  border-radius:50%;
-  background:linear-gradient(120deg, rgba(30,70,130,.8), rgba(200,105,105,.7));
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#fff;
-  font-size:12px;
-}
-
 
-html{ overflow-x:hidden; }
-.section, .hero{ overflow:hidden; }
-
-
-/* ===== ABOUT BLOCK REFINEMENT (editorial) ===== */
-#about{ overflow:hidden; }
-#about::before{
-  /* keep the cinematic band inside without causing horizontal overflow */
-  left:-40px; right:-40px;
+.result {
+    margin-top: 20px;
+    font-size: 18px;
 }
 
-
-/* ===== SOUND BUTTON (premium) ===== */
-.sound-toggle{
-  position:fixed;
-  right:24px;
-  bottom:24px;
-  z-index:90;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:12px 20px;
-  border-radius:999px;
-  background:rgba(255,255,255,.88);
-  backdrop-filter: blur(14px);
-  border:1px solid rgba(0,0,0,.12);
-  box-shadow:0 18px 40px rgba(0,0,0,.12);
-  font-weight:700;
-  cursor:pointer;
-  transition:all .35s ease;
-  animation:breathe 3.5s ease-in-out infinite;
-}
-.sound-toggle:hover{
-  transform:translateY(-4px) scale(1.02);
-  box-shadow:0 28px 70px rgba(0,0,0,.22);
+footer {
+    padding: 40px;
+    text-align: center;
+    background: #000;
+    opacity: 0.6;
 }
-.sound-toggle.active{
-  background:linear-gradient(120deg, rgba(30,70,130,.9), rgba(200,105,105,.85));
-  color:white;
-  box-shadow:0 0 35px rgba(200,105,105,.35);
-  animation:none;
-}
-.sound-toggle .icon{
-  width:22px;
-  height:22px;
-  border-radius:50%;
-  background:linear-gradient(120deg, rgba(30,70,130,.85), rgba(200,105,105,.75));
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#fff;
-  font-size:12px;
-}
-@keyframes breathe{
-  0%{ box-shadow:0 18px 40px rgba(0,0,0,.12); }
-  50%{ box-shadow:0 20px 50px rgba(200,105,105,.18); }
-  100%{ box-shadow:0 18px 40px rgba(0,0,0,.12); }
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="topbar">
-  <div class="nav">
-    <div class="logo"><span class="rg"><span class="mark" aria-hidden="true"></span><span class="title">RealGrow</span></span><span class="tag">— реальный рост</span></div>
-    <div class="navlinks">
-      <a href="#about">Подход</a>
-      <a href="#capital">Стратегия</a>
-      <a href="#how">Процесс</a>
-      <a href="#contact">Контакт</a>
-    </div>
-    <div class="navcta"><a href="#contact" class="nav-contact">Контакт</a></div>
-  </div>
-</div>
+<section class="hero">
+    <h1>Недвижимость как инструмент формирования капитала</h1>
+</section>
 
+<section class="capital">
+    <h2>Инвестиционный капитал из сделки</h2>
+    <p class="subtitle">Как формируется ваш инвестиционный капитал</p>
 
-<!-- HERO -->
-<header class="hero">
-  <div class="container">
-    <div class="hero-grid">
-      <div class="hero-image reveal slow" data-reveal>
-        <img src="hero.jpg" alt="Агент и клиент — одна сторона сделки">
-      </div>
-
-      <div class="hero-copy">
-        <div class="kicker reveal" data-reveal>Недвижимость • партнёрство • капитал</div>
-        <div class="h1 reveal" data-reveal>Агент и клиент — одна сторона сделки</div>
-
-        <div class="hero-sub p muted reveal" data-reveal>
-          Недвижимость без конфликта интересов.<br>
-          Я действую так, как если бы принимал решение для себя — <strong>и для вас</strong>.
+    <div class="capital-grid">
+        <div class="card">
+            <h3>1. Сделка по недвижимости</h3>
+            <p>Покупка объекта с полным сопровождением.</p>
         </div>
 
-        <div class="hero-sub p muted reveal" data-reveal style="margin-top:12px;">
-          <strong>Я работаю с недвижимостью как с инструментом создания капитала — вместе с клиентом.</strong>
+        <div class="card">
+            <h3>2. Формирование капитала</h3>
+            <p>Часть комиссии перераспределяется в пользу клиента и формирует стартовый капитал.</p>
         </div>
 
-        <div class="buttons reveal" data-reveal>
-          <a class="btn btn-primary" href="#contact">
-            <span class="btn-icon">✦</span> Обсудить задачу
-          </a>
-          <a class="btn btn-secondary" href="#capital">
-            <span class="btn-icon">↘</span> Мой подход
-          </a>
+        <div class="card">
+            <h3>3. Управление капиталом</h3>
+            <p>Сценарная модель роста по выбранной стратегии.</p>
         </div>
-      </div>
-    </div>
-  </div>
-</header>
 
-<!-- ABOUT -->
-<section class="section soft" id="about">
-  <div class="container">
-    <div class="center">
-      <div class="kicker reveal" data-reveal>Принцип работы</div>
-      <div class="h2 reveal" data-reveal>Партнёрство вместо давления</div>
-      <div class="p muted reveal" data-reveal style="max-width:780px;margin:0 auto;">
-        Я не заинтересован «просто закрыть сделку». Моя задача — чтобы вы были уверены в решении
-        не только сегодня, но и спустя годы.
-      </div>
+        <div class="card">
+            <h3>4. Реализация дохода</h3>
+            <p>Направление результата на ипотеку, реинвест или пассивный доход.</p>
+        </div>
     </div>
-  </div>
+
+    <a href="#calc" class="cta-button">Рассчитать ваш капитал</a>
+
+    <div class="note">
+        Сценарный расчёт при благоприятной рыночной динамике. Не является гарантией доходности.
+    </div>
 </section>
 
-<!-- CAPITAL -->
-<section class="section" id="capital">
-  <div class="container">
-    <div class="center">
-      <div class="kicker reveal" data-reveal>Стратегия</div>
-      <div class="h2 reveal" data-reveal>Недвижимость как инструмент капитала</div>
-      <div class="p muted reveal" data-reveal style="max-width:860px;margin:0 auto;">
-        Мой основной опыт — создание и управление капиталом. Недвижимость для меня — один из самых надёжных
-        инструментов долгосрочного роста.
-      </div>
-    </div>
+<section class="calculator" id="calc">
+    <h2>Расчёт инвестиционного капитала</h2>
 
-    <div class="grid3">
-      <div class="card reveal" data-reveal>
-        <div class="num">1000</div>
-        <h3>Путь практики и масштаба</h3>
-        <p>Осознанная цель: пройти 1000 сделок, чтобы глубоко понять рынок и выстроить систему.</p>
-      </div>
+    <input type="number" id="price" placeholder="Введите стоимость объекта">
+    <br>
+    <button class="cta-button" onclick="calculate()">Рассчитать</button>
 
-      <div class="card reveal" data-reveal>
-        <div class="num">01</div>
-        <h3>Совпадение интересов</h3>
-        <p>Я выстраиваю работу так, чтобы агент и клиент были заинтересованы в одном финансовом результате.</p>
-      </div>
-
-      <div class="card reveal" data-reveal>
-        <div class="num">∞</div>
-        <h3>Долгий горизонт</h3>
-        <p>Решение должно быть правильным “после”. Не спешка, а качество и защита клиента.</p>
-      </div>
-    </div>
-
-    <ul class="bullets reveal" data-reveal>
-      <li>Стратегия покупки/продажи строится от цели клиента, а не от “объекта, который надо закрыть”.</li>
-      <li>Лучшее решение иногда — подождать. И это тоже результат работы.</li>
-      <li>Фокус — на спокойной сделке и понятном маршруте до результата.</li>
-    </ul>
-  </div>
+    <div class="result" id="result"></div>
 </section>
 
-<!-- CLOSURE (философия) -->
-<section class="section soft" id="closure">
-  <div class="container">
-    <div class="center">
-      <div class="kicker reveal" data-reveal>Завершённость пути</div>
-      <div class="h2 reveal" data-reveal>Закрыть цикл и вернуть ценность</div>
-      <div class="quote reveal" data-reveal style="max-width:920px;margin:22px auto 0;">
-        <div class="mark">“</div>
-        <p class="p">
-          Для меня этот путь не бесконечен. Этап практики и масштаба — осознанный: я иду его до конца,
-          чтобы выстроить систему совместного результата. После завершения этапа я планирую закрыть цикл
-          и вернуть часть созданной ценности тем, с кем прошёл этот путь вместе.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- HOW -->
-<section class="section" id="how">
-  <div class="container">
-    <div class="center">
-      <div class="kicker reveal" data-reveal>Процесс</div>
-      <div class="h2 reveal" data-reveal>Как я работаю</div>
-      <div class="p muted reveal" data-reveal style="max-width:860px;margin:0 auto;">
-        Прозрачно по шагам: вы понимаете, что происходит, какие есть варианты и почему мы выбираем именно это решение.
-      </div>
-    </div>
-
-    <div class="grid3">
-      <div class="card reveal" data-reveal>
-        <div class="num">01</div>
-        <h3>Диагностика</h3>
-        <p>Цели, сроки, бюджет, риски. Фиксируем критерии, чтобы не «плыть» в процессе.</p>
-      </div>
-
-      <div class="card reveal" data-reveal>
-        <div class="num">02</div>
-        <h3>Проверка и стратегия</h3>
-        <p>Подбор/оценка, проверки, переговоры. Решение принимается осознанно, без давления.</p>
-      </div>
-
-      <div class="card reveal" data-reveal>
-        <div class="num">03</div>
-        <h3>Сделка под контролем</h3>
-        <p>Документы, этапы, сопровождение до финала. Максимально спокойно и профессионально.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section class="section dark" id="contact">
-  <div class="container">
-    <div class="center">
-      <div class="kicker reveal" data-reveal>Контакт</div>
-      <div class="h2 reveal" data-reveal>Недвижимость — это решение, а не эмоция</div>
-      <div class="p muted reveal" data-reveal style="max-width:860px;margin:0 auto;">
-        Если вам близок партнёрский и стратегический подход — давайте обсудим вашу задачу.
-      </div>
-
-      <div class="buttons reveal" data-reveal style="justify-content:center;">
-        <a class="btn btn-primary" href="tel:+70000000000"><span class="btn-icon">☎</span> Позвонить</a>
-        <a class="btn btn-secondary" href="#"><span class="btn-icon">✉</span> Telegram</a>
-      </div>
-
-      <div class="p muted reveal" data-reveal style="margin-top:16px; font-size:12px; opacity:.75;">
-        Подставь свои контакты внизу файла: телефон и ссылку Telegram.
-      </div>
-    </div>
-  </div>
-</section>
+<footer>
+    © Сергей | Недвижимость + Капитал
+</footer>
 
 <script>
-(function(){
-  const els = Array.from(document.querySelectorAll('[data-reveal]'));
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){
-        e.target.classList.add('in');
-        io.unobserve(e.target);
-      }
-    });
-  }, {threshold: 0.14});
-  els.forEach(el=>io.observe(el));
-})();
+function calculate() {
+    let price = document.getElementById("price").value;
+    if (!price) return;
+
+    let bonus = price * 0.03; // внутренняя формула
+    let scenario40 = bonus * 1.4;
+    let scenario100 = bonus * 2;
+    let scenario200 = bonus * 3;
+
+    document.getElementById("result").innerHTML =
+        "Ваш стартовый капитал: <b>" + Math.round(bonus).toLocaleString() + " ₽</b><br><br>" +
+        "Сценарий 40%: " + Math.round(scenario40).toLocaleString() + " ₽<br>" +
+        "Сценарий 100%: " + Math.round(scenario100).toLocaleString() + " ₽<br>" +
+        "Сценарий 200%: " + Math.round(scenario200).toLocaleString() + " ₽";
+}
 </script>
-
-
-<!-- Ambient Sound -->
-<div class="sound-toggle" id="soundToggle">
-  <div class="icon">♫</div>
-  <span>Включить атмосферу</span>
-</div>
-
-<span>Включить атмосферу</span>
-</div>
-
-<audio id="ambientAudio" loop preload="auto">
-  <source src="ambient.mp3" type="audio/mpeg">
-</audio>
-
-
-<script>
-(function(){
-  const btn = document.getElementById('soundToggle');
-  const audio = document.getElementById('ambientAudio');
-  let playing = false;
-
-  btn.addEventListener('click', () => {
-    if(!playing){
-      audio.volume = 0.5;   // 50%
-      audio.play();
-      btn.classList.add('active');
-      btn.querySelector('span').textContent = 'Выключить атмосферу';
-      playing = true;
-    } else {
-      audio.pause();
-      audio.currentTime = 0;
-      btn.classList.remove('active');
-      btn.querySelector('span').textContent = 'Включить атмосферу';
-      playing = false;
-    }
-  });
-})();
-</script>
-
 
 </body>
 </html>
