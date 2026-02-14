@@ -1,183 +1,2741 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Недвижимость как инструмент капитала</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Агент и клиент — одна сторона сделки</title>
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #0e0e0e;
-    color: #fff;
+:root{
+  --hero:#f4efe9;
+  --soft:#efe6dd;         /* контрастнее, чем раньше */
+  --paper:rgba(255,255,255,.62);
+  --paper2:rgba(255,255,255,.42);
+  --dark:#141416;
+
+  --text:#1c1c1c;
+  --muted:#5f5b55;
+  --light:#f7f6f4;
+
+  --accent:#8f2d2d;       /* винный */
+  --accent2:#b54a4a;      /* чуть “глянцевее” */
+  --line:rgba(0,0,0,.08);
+
+  --shadow:0 26px 70px rgba(0,0,0,.18);
+  --shadow2:0 16px 40px rgba(0,0,0,.12);
+  --r:14px;
+
+  --max:1120px;
 }
 
-/* HERO */
-.hero {
-    height: 70vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background: linear-gradient(180deg, #111, #1a1a1a);
-}
-.hero h1 {
-    font-size: 42px;
-    max-width: 800px;
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:var(--hero);
+
+  overflow-x:hidden;
 }
 
-/* INVEST SECTION */
-.capital {
-    padding: 80px 20px;
-    background: linear-gradient(180deg, #111, #000);
-    text-align: center;
+/* layout */
+.container{max-width:var(--max); margin:0 auto; padding:0 40px;}
+.container.wide{max-width:1240px;}
+.section{padding:110px 0; border-top:1px solid var(--line);}
+.section:first-of-type{border-top:none;}
+.soft{background:var(--soft);}
+.dark{background:var(--dark); color:var(--light);}
+.dark .muted{color:rgba(247,246,244,.78);}
+
+.h1{font-size:46px; line-height:1.12; letter-spacing:-.7px;}
+.h2{font-size:36px; line-height:1.18; letter-spacing:-.4px;}
+.p{font-size:18px; line-height:1.72;}
+.muted{color:var(--muted);}
+
+.kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 12px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:rgba(255,255,255,.25);
+  font-size:12px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:rgba(28,28,28,.65);
+  margin-bottom:16px;
 }
 
-.capital h2 {
-    font-size: 36px;
-    margin-bottom: 10px;
+/* hero */
+.hero{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  padding:80px 0;
+  position:relative;
+  border-top:none;
+  background:
+    radial-gradient(900px 520px at 20% 20%, rgba(181,74,74,.10), transparent 60%),
+    radial-gradient(900px 520px at 85% 35%, rgba(143,45,45,.08), transparent 60%),
+    linear-gradient(180deg, #f7f3ee 0%, var(--hero) 55%, var(--hero) 100%);
 }
 
-.capital p.subtitle {
-    opacity: 0.8;
-    margin-bottom: 40px;
+.hero-grid{
+  display:grid;
+  grid-template-columns:360px 1fr;
+  gap:78px;
+  align-items:center;
 }
 
-.capital-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-    max-width: 1100px;
-    margin: 0 auto 40px;
+.hero-image{
+  position:relative;
+  border-radius:var(--r);
+}
+.hero-image::before{
+  content:"";
+  position:absolute;
+  top:8%;
+  bottom:8%;
+  left:50%;
+  width:2px;
+  background:rgba(255,255,255,.82);
+  transform:translateX(-50%);
+  border-radius:2px;
+}
+.hero-image img{
+  width:100%;
+  display:block;
+  border-radius:var(--r);
+  box-shadow:var(--shadow);
 }
 
-.card {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 14px;
-    padding: 20px;
+.hero-copy{max-width:640px;}
+.hero-sub{
+  margin-top:16px;
+  max-width:620px;
+}
+.hero-sub strong{
+  color:var(--text);
+  font-weight:800;
 }
 
-.card h3 {
-    margin-top: 0;
-    font-size: 18px;
+/* buttons */
+.buttons{display:flex; gap:14px; flex-wrap:wrap; margin-top:28px;}
+.btn{
+  padding:14px 18px;
+  border-radius:12px;
+  font-weight:700;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  transition:transform .18s ease, opacity .18s ease, border-color .18s ease;
+  user-select:none;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{
+  background:linear-gradient(180deg, var(--accent2), var(--accent));
+  color:#fff;
+  box-shadow:0 14px 28px rgba(143,45,45,.18);
+}
+.btn-secondary{
+  border:1px solid rgba(0,0,0,.14);
+  background:rgba(255,255,255,.35);
+  color:var(--text);
+}
+.btn-icon{
+  width:26px; height:26px;
+  border-radius:9px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,.22);
+  border:1px solid rgba(255,255,255,.18);
 }
 
-.cta-button {
-    background: #d4a74a;
-    color: #000;
-    padding: 16px 32px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    display: inline-block;
-    margin-top: 20px;
+/* blocks */
+.center{max-width:920px; margin:0 auto; text-align:center;}
+.stack{margin-top:28px;}
+.hr{height:1px; background:var(--line); margin:28px 0;}
+
+.grid3{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:16px;
+  margin-top:30px;
 }
 
-.note {
-    font-size: 13px;
-    opacity: 0.7;
-    margin-top: 25px;
+.card{
+  background:var(--paper);
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:18px;
+  padding:22px;
+  box-shadow:var(--shadow2);
+  backdrop-filter: blur(6px);
+}
+.card h3{font-size:18px; letter-spacing:-.2px; margin-bottom:10px;}
+.card p{font-size:15.5px; line-height:1.65; color:var(--muted);}
+
+.num{
+  width:40px; height:40px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  color:var(--accent);
+  background:rgba(143,45,45,.12);
+  border:1px solid rgba(143,45,45,.16);
+  margin-bottom:12px;
 }
 
-/* CALCULATOR */
-.calculator {
-    padding: 80px 20px;
-    text-align: center;
-    background: #111;
+.bullets{
+  margin-top:18px;
+  display:grid;
+  gap:10px;
+  max-width:760px;
+}
+.bullets li{
+  list-style:none;
+  padding-left:18px;
+  position:relative;
+  color:var(--muted);
+  line-height:1.65;
+}
+.bullets li::before{
+  content:"";
+  position:absolute;
+  left:0; top:.72em;
+  width:8px; height:8px;
+  border-radius:99px;
+  background:rgba(143,45,45,.35);
 }
 
-.calculator input {
-    padding: 12px;
-    width: 250px;
-    font-size: 16px;
-    margin-bottom: 20px;
+/* highlight quote */
+.quote{
+  background:
+    radial-gradient(520px 240px at 30% 20%, rgba(181,74,74,.10), transparent 70%),
+    var(--paper2);
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:22px;
+  padding:26px;
+  box-shadow:var(--shadow2);
+}
+.quote .mark{
+  font-size:44px; line-height:1;
+  color:rgba(143,45,45,.35);
+  font-weight:900;
+  margin-bottom:6px;
+}
+.quote p{color:var(--muted);}
+
+/* dark section buttons */
+.dark .btn-secondary{
+  background:rgba(255,255,255,.06);
+  border-color:rgba(255,255,255,.18);
+  color:var(--light);
+}
+.dark .kicker{
+  background:rgba(255,255,255,.06);
+  border-color:rgba(255,255,255,.14);
+  color:rgba(247,246,244,.70);
 }
 
-.result {
-    margin-top: 20px;
-    font-size: 18px;
+/* reveal animation */
+.reveal{
+  opacity:0;
+  transform:translateY(14px);
+  filter: blur(6px);
+  transition: opacity .75s ease, transform .75s ease, filter .75s ease;
+}
+.reveal.in{
+  opacity:1;
+  transform:none;
+  filter:none;
+}
+.reveal.slow{
+  transition-duration: 1.05s;
 }
 
-footer {
-    padding: 40px;
-    text-align: center;
-    background: #000;
-    opacity: 0.6;
+/* mobile */
+@media(max-width:920px){
+  .container{padding:0 20px;}
+  .hero-grid{grid-template-columns:1fr; gap:42px; text-align:center;}
+  .hero-image{max-width:300px; margin:0 auto;}
+  .hero-copy{max-width:unset;}
+  .grid3{grid-template-columns:1fr;}
+  .buttons{justify-content:center;}
+  .h1{font-size:38px;}
+  .h2{font-size:30px;}
+  .section{padding:86px 0;}
 }
+
+/* top navigation */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:50;
+  backdrop-filter: blur(10px);
+  background:rgba(244,239,233,.65);
+  border-bottom:1px solid rgba(0,0,0,.06);
+}
+.nav{
+  max-width:var(--max);
+  margin:0 auto;
+  padding:14px 40px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+}
+.brand{
+  font-weight:900;
+  letter-spacing:-.3px;
+}
+.brand span{
+  color:var(--accent);
+}
+.navlinks{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-end;
+}
+.navlinks a{
+  text-decoration:none;
+  font-weight:700;
+  font-size:13px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.10);
+  background:rgba(255,255,255,.25);
+  color:rgba(28,28,28,.85);
+  transition:transform .18s ease, border-color .18s ease, background .18s ease, opacity .18s ease;
+}
+.navlinks a:hover{
+  transform:translateY(-1px);
+  border-color:rgba(0,0,0,.18);
+  background:rgba(255,255,255,.35);
+}
+.navcta{
+  display:inline-flex;
+  gap:10px;
+  align-items:center;
+}
+@media(max-width:920px){
+  .nav{padding:12px 20px;}
+  .navlinks{display:none;}
+}
+
+/* anchor offsets */
+#about,#capital,#closure,#how,#calculator,#contact{scroll-margin-top:84px;}
+
+/* premium photo accent */
+.hero-image{
+  position:relative;
+  border-radius:var(--r);
+  padding:10px;
+  background:
+    radial-gradient(220px 160px at 25% 18%, rgba(255,255,255,.55), transparent 62%),
+    radial-gradient(320px 220px at 80% 35%, rgba(181,74,74,.18), transparent 65%),
+    rgba(255,255,255,.22);
+  border:1px solid rgba(0,0,0,.08);
+  box-shadow: var(--shadow2);
+}
+.hero-image::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:calc(var(--r) + 2px);
+  pointer-events:none;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.35) inset,
+    0 28px 80px rgba(143,45,45,.08);
+  opacity:1;
+}
+.hero-image img{
+  border-radius:calc(var(--r) - 2px);
+  box-shadow:var(--shadow);
+}
+
+
+/* ---- production glow pack (tasteful) ---- */
+:root{
+  --glow-red: rgba(181,74,74,.22);
+  --glow-white: rgba(255,255,255,.55);
+}
+
+/* ambient vignette (subtle) */
+.hero{ position:relative; }
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:-120px -120px -60px -120px;
+  pointer-events:none;
+  background:
+    radial-gradient(900px 600px at 15% 20%, rgba(255,255,255,.32), transparent 62%),
+    radial-gradient(900px 600px at 85% 30%, rgba(181,74,74,.16), transparent 60%),
+    radial-gradient(900px 700px at 50% 110%, rgba(0,0,0,.06), transparent 55%);
+  opacity:.9;
+}
+
+/* hero photo: deeper + soft glow edge */
+.hero-image{
+  box-shadow:
+    0 16px 42px rgba(0,0,0,.10),
+    0 40px 120px rgba(143,45,45,.10);
+}
+.hero-image::after{
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.36) inset,
+    0 28px 90px rgba(143,45,45,.10),
+    0 0 56px rgba(181,74,74,.10);
+}
+.hero-image img{
+  filter: drop-shadow(0 24px 70px rgba(0,0,0,.16));
+}
+
+/* cards: more depth + glow on hover */
+.card{
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.10),
+    0 28px 90px rgba(0,0,0,.06);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.card:hover{
+  transform: translateY(-2px);
+  border-color: rgba(143,45,45,.18);
+  box-shadow:
+    0 18px 44px rgba(0,0,0,.12),
+    0 40px 140px rgba(143,45,45,.10),
+    0 0 44px rgba(181,74,74,.10);
+}
+
+/* buttons: glossy glow */
+.btn-primary{
+  box-shadow:
+    0 14px 28px rgba(143,45,45,.18),
+    0 0 28px rgba(181,74,74,.12);
+}
+.btn-primary:hover{
+  box-shadow:
+    0 18px 36px rgba(143,45,45,.22),
+    0 0 40px rgba(181,74,74,.18);
+}
+.btn-secondary:hover{
+  box-shadow:
+    0 10px 22px rgba(0,0,0,.08),
+    0 0 22px rgba(255,255,255,.22);
+}
+
+/* quote: a little more “studio light” */
+.quote{
+  box-shadow:
+    0 16px 44px rgba(0,0,0,.10),
+    0 40px 140px rgba(143,45,45,.08);
+}
+
+
+/* --- RealGrow logo --- */
+.logo{
+  font-weight:900;
+  letter-spacing:-.4px;
+  font-size:18px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.logo span{
+  background: linear-gradient(120deg, #8f2d2d, #c35a5a, #8f2d2d);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 6s ease-in-out infinite;
+}
+@keyframes shimmer{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+
+/* --- RealGrow logo (stronger, visible shimmer) --- */
+.logo{
+  font-weight:900;
+  letter-spacing:-.4px;
+  font-size:18px;
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  position:relative;
+}
+.logo .rg{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.logo .mark{
+  width:10px; height:10px;
+  border-radius:999px;
+  background:linear-gradient(120deg, #8f2d2d, #ffb4b4, #8f2d2d);
+  background-size:220% 220%;
+  box-shadow:0 0 0 1px rgba(0,0,0,.08), 0 0 18px rgba(181,74,74,.28);
+  animation: shimmerFast 2.6s ease-in-out infinite, pulse 1.8s ease-in-out infinite;
+}
+.logo .title{
+  color:rgba(28,28,28,.92);
+}
+.logo .tag{
+  font-weight:800;
+  background: linear-gradient(110deg, #8f2d2d 0%, #ffb9b9 35%, #8f2d2d 70%, #ffb9b9 100%);
+  background-size: 300% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation: shimmerLine 2.8s linear infinite;
+  text-shadow: 0 10px 22px rgba(143,45,45,.10);
+  position:relative;
+}
+.logo::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-10px;
+  width:100%;
+  height:2px;
+  border-radius:999px;
+  background:linear-gradient(90deg, rgba(143,45,45,.0), rgba(143,45,45,.55), rgba(255,185,185,.85), rgba(143,45,45,.55), rgba(143,45,45,.0));
+  background-size:200% 100%;
+  animation: shimmerUnderline 2.6s linear infinite;
+  opacity:.85;
+}
+@keyframes shimmerLine{
+  0%{background-position:0% 50%}
+  100%{background-position:300% 50%}
+}
+@keyframes shimmerUnderline{
+  0%{background-position:0% 50%}
+  100%{background-position:200% 50%}
+}
+@keyframes shimmerFast{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.18)}
+}
+@media (prefers-reduced-motion: reduce){
+  .logo .tag, .logo::after, .logo .mark{animation:none !important}
+}
+
+
+.nav-contact{
+  font-weight:700;
+  text-decoration:none;
+  padding:8px 12px;
+  border-radius:999px;
+  color:rgba(28,28,28,.85);
+}
+.nav-contact:hover{opacity:.75}
+
+
+/* --- Hero dual-tone (blue → soft red) --- */
+.hero{
+  background:
+    radial-gradient(900px 600px at 20% 50%, rgba(46,74,120,.35), transparent 60%),
+    radial-gradient(900px 600px at 80% 50%, rgba(190, 90, 90, .28), transparent 60%),
+    linear-gradient(90deg,
+      rgba(32,58,95,.55) 0%,
+      rgba(245,239,231,.75) 45%,
+      rgba(210,110,110,.45) 100%);
+}
+
+
+
+
+@keyframes heroShift{
+  0%{
+    background-position: 0% 50%, 100% 50%, 50% 50%;
+    filter: contrast(1.05) saturate(1.05);
+  }
+  50%{
+    background-position: 5% 48%, 95% 52%, 50% 50%;
+    filter: contrast(1.18) saturate(1.15);
+  }
+  100%{
+    background-position: 0% 50%, 100% 50%, 50% 50%;
+    filter: contrast(1.05) saturate(1.05);
+  }
+}
+
+/* cinematic vignette */
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(0,0,0,.18) 100%);
+  pointer-events:none;
+}
+
+/* hero text pop */
+.hero h1{
+  color:#161616;
+  text-shadow:0 18px 40px rgba(0,0,0,.18);
+}
+.hero .lead{
+  color:rgba(10,10,10,.88);
+}
+
+/* photo divider glow */
+.hero-image::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,
+      transparent 48%,
+      rgba(255,255,255,.55) 50%,
+      transparent 52%);
+  mix-blend-mode:overlay;
+  opacity:.75;
+  animation: linePulse 4.5s ease-in-out infinite;
+  pointer-events:none;
+}
+
+@keyframes linePulse{
+  0%,100%{opacity:.35}
+  50%{opacity:.85}
+}
+
+/* hero content entrance */
+.hero .content{
+  animation: heroIn 1.6s ease-out both;
+}
+@keyframes heroIn{
+  from{opacity:0; transform:translateY(18px)}
+  to{opacity:1; transform:translateY(0)}
+}
+
+
+/* ===== HERO LIVE BACKGROUND (REAL MOTION) ===== */
+.hero{
+  position: relative;
+  background:
+    radial-gradient(1200px 800px at 20% 50%, rgba(30,70,130,.60), transparent 60%),
+    radial-gradient(1200px 800px at 80% 50%, rgba(210,120,120,.48), transparent 60%),
+    linear-gradient(
+      90deg,
+      rgba(25,45,80,.92),
+      rgba(245,238,230,.96),
+      rgba(200,105,105,.82)
+    );
+  background-size: 160% 160%;
+  animation: heroFloat 18s ease-in-out infinite;
+}
+
+@keyframes heroFloat{
+  0%{ background-position: 0% 50%; }
+  50%{ background-position: 100% 50%; }
+  100%{ background-position: 0% 50%; }
+}
+
+/* cinematic vignette */
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(0,0,0,.22) 100%);
+  pointer-events:none;
+}
+
+/* divider glow */
+.hero-image::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,
+      transparent 48%,
+      rgba(255,255,255,.65) 50%,
+      transparent 52%);
+  opacity:.85;
+  animation: linePulse 4.5s ease-in-out infinite;
+  pointer-events:none;
+}
+
+@keyframes linePulse{
+  0%,100%{opacity:.35}
+  50%{opacity:.95}
+}
+
+
+/* ===== Ambient Sound Toggle ===== */
+.sound-toggle{
+  position:fixed;
+  right:24px;
+  bottom:24px;
+  z-index:90;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 16px;
+  border-radius:999px;
+  background:rgba(255,255,255,.75);
+  backdrop-filter: blur(10px);
+  border:1px solid rgba(0,0,0,.12);
+  box-shadow:0 18px 40px rgba(0,0,0,.12);
+  font-weight:700;
+  cursor:pointer;
+  transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+}
+.sound-toggle:hover{
+  transform:translateY(-2px);
+  box-shadow:0 24px 60px rgba(0,0,0,.18);
+}
+.sound-toggle .icon{
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:linear-gradient(120deg, rgba(30,70,130,.8), rgba(200,105,105,.7));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:12px;
+}
+
+
+html{ overflow-x:hidden; }
+.section, .hero{ overflow:hidden; }
+
+
+/* ===== ABOUT BLOCK REFINEMENT (editorial) ===== */
+/* ===== PRINCIPLE BLOCK (ABOUT) — split layout ===== */
+.principle-grid{
+  margin-top:28px;
+  display:grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap:18px;
+  align-items:stretch;
+}
+.principle-left{
+  border-radius:24px;
+  background:rgba(255,255,255,.62);
+  border:1px solid rgba(0,0,0,.08);
+  box-shadow:var(--shadow2);
+  padding:34px 34px;
+  display:flex;
+  align-items:center;
+  min-height:340px;
+}
+.principle-left .p{color:rgba(28,28,28,.88);}
+.principle-left strong{color:rgba(28,28,28,.95); font-weight:900;}
+.principle-right{
+  border-radius:24px;
+  background:rgba(255,255,255,.52);
+  border:1px solid rgba(0,0,0,.08);
+  box-shadow:var(--shadow2);
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.principle-item{
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+  padding:18px 18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.52);
+  border:1px solid rgba(0,0,0,.06);
+}
+.principle-dot{
+  width:10px; height:10px;
+  margin-top:6px;
+  border-radius:99px;
+  background:linear-gradient(120deg, rgba(30,70,130,.85), rgba(200,105,105,.75));
+  box-shadow:0 0 0 3px rgba(255,255,255,.65);
+  flex:0 0 auto;
+}
+.principle-title{
+  font-weight:900;
+  letter-spacing:-.2px;
+  margin-bottom:6px;
+  font-size:18px;
+  color:rgba(28,28,28,.92);
+}
+.principle-text{
+  color:rgba(95,91,85,.92);
+  line-height:1.6;
+  font-size:14.8px;
+}
+.principle-footer{
+  margin-top:auto;
+  padding:18px 18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.42);
+  border:1px solid rgba(0,0,0,.06);
+  color:rgba(28,28,28,.85);
+}
+.principle-footer strong{font-weight:900; color:rgba(28,28,28,.95);}
+
+@media(max-width:920px){
+  .principle-grid{grid-template-columns:1fr; gap:16px;}
+  .principle-left{min-height:unset; padding:26px;}
+}
+
+#about{ overflow:hidden; }
+#about::before{
+  /* keep the cinematic band inside without causing horizontal overflow */
+  left:-40px; right:-40px;
+}
+
+
+/* ===== SOUND BUTTON (premium) ===== */
+.sound-toggle{
+  position:fixed;
+  right:24px;
+  bottom:24px;
+  z-index:90;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 20px;
+  border-radius:999px;
+  background:rgba(255,255,255,.88);
+  backdrop-filter: blur(14px);
+  border:1px solid rgba(0,0,0,.12);
+  box-shadow:0 18px 40px rgba(0,0,0,.12);
+  font-weight:700;
+  cursor:pointer;
+  transition:all .35s ease;
+  animation:breathe 3.5s ease-in-out infinite;
+}
+.sound-toggle:hover{
+  transform:translateY(-4px) scale(1.02);
+  box-shadow:0 28px 70px rgba(0,0,0,.22);
+}
+.sound-toggle.active{
+  background:linear-gradient(120deg, rgba(30,70,130,.9), rgba(200,105,105,.85));
+  color:white;
+  box-shadow:0 0 35px rgba(200,105,105,.35);
+  animation:none;
+}
+.sound-toggle .icon{
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:linear-gradient(120deg, rgba(30,70,130,.85), rgba(200,105,105,.75));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:12px;
+}
+@keyframes breathe{
+  0%{ box-shadow:0 18px 40px rgba(0,0,0,.12); }
+  50%{ box-shadow:0 20px 50px rgba(200,105,105,.18); }
+  100%{ box-shadow:0 18px 40px rgba(0,0,0,.12); }
+}
+
+
+/* ===== Calculator (Investment Capital) ===== */
+.calc-wrap{
+  margin-top:26px;
+  display:grid;
+  grid-template-columns: minmax(360px, 420px) 1fr;
+  gap:20px;
+  align-items:stretch;
+}
+@media(max-width:900px){ .calc-wrap{grid-template-columns:1fr; } }
+
+.calc-panel{
+  border-radius:var(--r);
+  background:linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.48));
+  border:1px solid rgba(0,0,0,.10);
+  box-shadow: var(--shadow2);
+  padding:22px;
+}
+.calc-panel.darkish{
+  background:linear-gradient(180deg, rgba(20,20,22,.92), rgba(20,20,22,.82));
+  border:1px solid rgba(255,255,255,.12);
+  color:var(--light);
+}
+
+.calc-row{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:12px;
+  margin-top:12px;
+}
+@media(max-width:520px){ .calc-row{grid-template-columns:1fr;} }
+
+.calc-field label{
+  display:block;
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin: 0 0 8px;
+}
+.darkish .calc-field label{ color: rgba(255,255,255,.72); }
+
+.calc-input, .calc-select{
+  width:100%;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,.12);
+  background:rgba(255,255,255,.82);
+  padding:12px 12px;
+  font-size:16px;
+  color:var(--text);
+  outline:none;
+}
+.calc-select{ cursor:pointer; }
+.calc-input:focus, .calc-select:focus{
+  border-color: rgba(143,45,45,.45);
+  box-shadow: 0 0 0 4px rgba(181,74,74,.16);
+}
+
+.calc-actions{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+  flex-wrap:wrap;
+}
+.calc-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:12px 16px;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.78);
+  cursor:pointer;
+  font-weight:800;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.calc-btn.primary{
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 18px 40px rgba(143,45,45,.22);
+}
+.calc-btn:hover{ transform: translateY(-1px); box-shadow: 0 16px 34px rgba(0,0,0,.12); }
+.calc-btn.primary:hover{ box-shadow: 0 22px 52px rgba(143,45,45,.26); }
+
+.calc-note{
+  margin-top:12px;
+  font-size:13px;
+  color: rgba(255,255,255,.72);
+}
+.calc-kpis{
+  display:grid;
+  gap:10px;
+  margin-top:10px;
+}
+.kpi{
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  padding:16px 16px;
+}
+.kpi .k{font-size:12px; letter-spacing:.08em; text-transform:uppercase; opacity:.75}
+.kpi .v{
+  font-size: clamp(24px, 2.6vw, 32px);
+  font-weight:900;
+  margin-top:6px;
+  letter-spacing:-.35px;
+  white-space:normal;
+  line-height:1.05;
+  word-break:keep-all;
+}
+.kpi .s{font-size:13px; opacity:.75; margin-top:2px}
+.kpi-grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(240px, 1fr));
+  gap:10px;
+}
+@media(max-width:820px){ .kpi-grid{grid-template-columns:1fr;} .kpi .v{white-space:normal;} }
+
+.kpi-grid .kpi{ min-width:0; }
+.kpi-grid .kpi .v{
+  font-size: clamp(20px, 2.2vw, 28px);
+}
+.v-range{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:baseline;
+}
+.v-range .dash{ opacity:.9; }
+
+
+.amount-range{font-size:18px;font-weight:700;line-height:1.25}
+.amount-range small{display:block;font-size:12px;font-weight:500;opacity:.75;margin-top:6px}
+.nowrap{white-space:nowrap}
+
+/* --- Calc layout tweaks (v8) --- */
+.calc-wrapper{grid-template-columns: 520px 1fr; gap: 56px;}
+.calc-left{padding: 36px;}
+.calc-left label{white-space: nowrap;}
+/* Make the top row (price + deal type) wider and cleaner */
+.calc-left .calc-row{display:grid; grid-template-columns: 1.25fr 1fr; gap: 16px;}
+.calc-left .calc-row .field{margin: 0;}
+.calc-left input, .calc-left select{font-size:14px; padding: 14px 16px;}
+/* Amounts: keep in one line */
+.amount-range{white-space: nowrap; font-size: 20px; font-weight: 800; line-height: 1.2;}
+/* Slightly smaller inside scenario cards */
+.scenario-card .amount-range{font-size: 18px;}
+/* If cards get tight on very small widths, allow wrap only below 420px */
+@media (max-width: 520px){
+  .calc-wrapper{grid-template-columns: 1fr; gap: 18px;}
+  .amount-range{white-space: normal;}
+}
+
+
+/* --- Visual polish (v10) keep logic intact --- */
+/* Make the whole calc row wider */
+.calc-wrap{max-width: 1320px;}
+/* Right panel: give a bit more breathing room */
+.calc-right{padding: 42px;}
+/* Capital number slightly smaller but still strong */
+.calc-kpis .kpi:first-child .v{font-size:32px; line-height:1.15; white-space:nowrap;}
+/* Scenario cards: allow range to fit in ONE line by reducing font + tightening spacing */
+.kpi-grid{gap:16px;}
+.kpi-grid .kpi{padding:18px;}
+.kpi-grid .kpi .v{
+  font-size:18px;
+  line-height:1.2;
+  white-space:nowrap;   /* keep in one line */
+  letter-spacing:0;
+  font-variant-numeric: tabular-nums;
+}
+/* If screen gets tight, wrap cards to 1 or 2 columns instead of squeezing text */
+@media (max-width: 1100px){
+  .kpi-grid{grid-template-columns: 1fr 1fr;}
+}
+@media (max-width: 720px){
+  .kpi-grid{grid-template-columns: 1fr;}
+  .kpi-grid .kpi .v{white-space:normal;}
+}
+
+
+/* --- Visual alignment & typography (v11) --- */
+.calc-left label{white-space:nowrap; line-height:1.2;}
+/* Tighten left panel header spacing */
+.calc-left{padding:34px;}
+/* Make the first row fields aligned */
+.calc-left .calc-row{align-items:end;}
+/* Inputs */
+.calc-left input, .calc-left select{font-size:14px; padding:13px 14px;}
+/* Right panel numbers */
+.calc-kpis .kpi:first-child .v{font-size:30px; letter-spacing:0.2px;}
+.kpi-grid .kpi .v{font-size:16px; font-weight:800; white-space:nowrap;}
+/* Keep dash together */
+.kpi-grid .kpi .v{word-spacing:0;}
+/* Reduce label sizes in cards */
+.kpi-grid .kpi .t{font-size:12px;}
+.calc-kpis .kpi:first-child .t{font-size:12px;}
+/* Reduce subtitle under value */
+.kpi-grid .kpi .s{font-size:12px; opacity:.78;}
+/* Make scenario cards slightly wider and consistent height */
+.kpi-grid{grid-template-columns:repeat(3, minmax(220px, 1fr)); gap:16px;}
+.kpi-grid .kpi{min-height:120px;}
+@media (max-width: 1100px){
+  .kpi-grid{grid-template-columns:1fr 1fr;}
+}
+@media (max-width: 720px){
+  .kpi-grid{grid-template-columns:1fr;}
+  .kpi-grid .kpi .v{white-space:normal;}
+}
+
+
+/* --- Final polish (v12) --- */
+.calc-field label{white-space:nowrap !important;}
+/* keep currency together even if browser inserts breaks */
+.calc-field label{word-break:keep-all !important;}
+/* scenario values must never wrap on desktop */
+.kpi-grid .kpi .v{white-space:nowrap !important; font-size:16px !important; letter-spacing:0 !important;}
+/* give scenario cards a bit more width so ranges fit */
+.kpi-grid{grid-template-columns:repeat(3, minmax(260px, 1fr)) !important;}
+/* slightly smaller main capital too */
+.calc-kpis .kpi:first-child .v{font-size:28px !important;}
+@media (max-width: 1200px){
+  .kpi-grid{grid-template-columns:1fr 1fr !important;}
+}
+@media (max-width: 720px){
+  .kpi-grid{grid-template-columns:1fr !important;}
+  .kpi-grid .kpi .v{white-space:normal !important;}
+}
+
+
+/* --- Right column polish (v13) --- */
+/* Make scenario grid a bit wider + consistent */
+.kpi-grid{
+  grid-template-columns: repeat(3, minmax(280px, 1fr));
+  gap: 18px;
+}
+/* Ensure all scenario values use same typography and stay in one line */
+.kpi-grid .kpi .v{
+  font-size: 18px !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  letter-spacing: 0 !important;
+  font-variant-numeric: tabular-nums;
+}
+/* Slightly reduce the 40% card value if it was oversized by other rules */
+.kpi-grid .kpi:first-child .v{
+  font-size: 18px !important;
+}
+/* Prevent any forced breaks inside the value span/text */
+.kpi-grid .kpi .v br{display:none;}
+/* If the screen is narrower, switch to 2 columns to avoid squeezing text */
+@media (max-width: 1180px){
+  .kpi-grid{grid-template-columns: 1fr 1fr;}
+}
+@media (max-width: 760px){
+  .kpi-grid{grid-template-columns: 1fr;}
+  .kpi-grid .kpi .v{white-space: normal !important;}
+}
+
+
+/* ===== Premium right column + neon selection (final) ===== */
+.calc-right{
+  background: linear-gradient(145deg,#1f1f22,#2a2a2f);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+}
+
+.kpi-grid .kpi{
+  background: linear-gradient(145deg,#2c2c31,#26262b);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  min-height: 140px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.kpi-grid .kpi:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+}
+
+.kpi-grid .kpi .v{
+  font-size: 17px;
+  font-weight: 700;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Green neon highlight for selected fields --- */
+.calc-field.is-selected,
+.calc-field.is-selected .calc-input,
+.calc-field.is-selected .calc-select{
+  border-color: rgba(0,255,140,0.55) !important;
+  box-shadow: 0 0 0 1px rgba(0,255,140,0.25), 0 0 26px rgba(0,255,140,0.18) !important;
+}
+
+.calc-field .calc-input:focus,
+.calc-field .calc-select:focus{
+  outline: none;
+  border-color: rgba(0,255,140,0.55);
+  box-shadow: 0 0 0 1px rgba(0,255,140,0.25), 0 0 26px rgba(0,255,140,0.18);
+}
+
+/* ===== WOW glow on results (click only) ===== */
+@keyframes neonPulseGreen{
+  0%   { box-shadow: 0 0 0 rgba(0,255,140,0); border-color: rgba(255,255,255,0.08); }
+  35%  { box-shadow: 0 0 44px rgba(0,255,140,0.26); border-color: rgba(0,255,140,0.28); }
+  70%  { box-shadow: 0 0 30px rgba(0,255,140,0.16); border-color: rgba(255,255,255,0.12); }
+  100% { box-shadow: 0 0 0 rgba(0,255,140,0); border-color: rgba(255,255,255,0.08); }
+}
+
+.capital-box.wow,
+.kpi-grid .kpi.wow{
+  animation: neonPulseGreen 1.05s ease;
+}
+
+.btn-primary{
+  transition: transform .15s ease, filter .15s ease, box-shadow .2s ease;
+  box-shadow: 0 10px 22px rgba(181,58,50,0.18);
+}
+.btn-primary:hover{ transform: translateY(-1px); filter: brightness(1.03); box-shadow: 0 14px 30px rgba(181,58,50,0.24); }
+.btn-primary:active{ transform: translateY(0); filter: brightness(0.98); }
+
+
+/* ===== Neon highlight upgrade (v5) ===== */
+@keyframes neonBorderFlow{
+  0%   { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(18deg); }
+}
+@keyframes neonSweep{
+  0% { transform: translateX(-140%) rotate(12deg); opacity: 0; }
+  20%{ opacity: 1; }
+  100%{ transform: translateX(140%) rotate(12deg); opacity: 0; }
+}
+
+.calc-field{ position: relative; }
+
+.calc-field.is-selected{
+  border-radius: 14px;
+}
+
+
+.calc-field.is-selected,
+.calc-field.is-selected .calc-input,
+.calc-field.is-selected .calc-select{
+  border-color: rgba(0,255,140,0.85) !important;
+  box-shadow:
+    0 0 0 1px rgba(0,255,140,0.35),
+    0 0 14px rgba(0,255,140,0.25),
+    0 0 42px rgba(0,255,140,0.18) !important;
+}
+
+.calc-field.is-selected .calc-input,
+.calc-field.is-selected .calc-select{
+  background: rgba(0,255,140,0.04);
+}
+
+.calc-field.is-selected::before{
+  content:"";
+  position:absolute;
+  inset:-18px;
+  border-radius: 18px;
+  background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.14) 50%, transparent 60%);
+  transform: translateX(-140%) rotate(12deg);
+  opacity: 0;
+  pointer-events:none;
+}
+.calc-field.is-selected.sweep::before{
+  animation: neonSweep .55s ease;
+}
+
+.capital-box.wow,
+.kpi-grid .kpi.wow{
+  animation: neonPulseGreen 1.05s ease;
+  box-shadow: 0 0 44px rgba(0,255,140,0.18);
+}
+
+
+/* ===== Stronger WOW neon (v8) ===== */
+:root{
+  --neon: rgba(0,255,140,0.95);
+  --neonSoft: rgba(0,255,140,0.35);
+  --neonGlow: rgba(0,255,140,0.22);
+}
+
+@keyframes neonFlicker{
+  0%, 100% { opacity: 0.92; }
+  8% { opacity: 0.80; }
+  16% { opacity: 0.95; }
+  22% { opacity: 0.78; }
+  30% { opacity: 0.96; }
+  55% { opacity: 0.88; }
+  70% { opacity: 0.97; }
+}
+@keyframes neonPulseBig{
+  0%   { box-shadow: 0 0 0 rgba(0,255,140,0); transform: translateY(0); }
+  35%  { box-shadow: 0 0 60px var(--neonGlow), 0 0 18px var(--neonSoft); transform: translateY(-1px); }
+  70%  { box-shadow: 0 0 42px rgba(0,255,140,0.16); transform: translateY(0); }
+  100% { box-shadow: 0 0 0 rgba(0,255,140,0); transform: translateY(0); }
+}
+
+/* Make right panel feel more premium */
+.calc-right{
+  background: radial-gradient(900px 420px at 30% 10%, rgba(0,255,140,0.06), transparent 55%),
+              linear-gradient(145deg,#1f1f22,#2a2a2f);
+}
+
+/* Stronger selection highlight */
+.calc-field.is-selected,
+.calc-field.is-selected .calc-input,
+.calc-field.is-selected .calc-select{
+  border-color: var(--neon) !important;
+  box-shadow:
+    0 0 0 1px rgba(0,255,140,0.45),
+    0 0 18px rgba(0,255,140,0.28),
+    0 0 70px rgba(0,255,140,0.18) !important;
+}
+
+/* Add neon outline using pseudo element */
+
+
+/* Results WOW state - bigger and cleaner */
+.capital-box.wow,
+.kpi-grid .kpi.wow{
+  animation: neonPulseBig 1.05s ease;
+  border-color: rgba(0,255,140,0.34) !important;
+}
+
+/* Scenario cards: add subtle inner glow always */
+.kpi-grid .kpi{
+  position: relative;
+  overflow: hidden;
+}
+.kpi-grid .kpi::after{
+  content:"";
+  position:absolute;
+  inset:-50% -60%;
+  background: radial-gradient(circle at 50% 50%, rgba(0,255,140,0.10), transparent 60%);
+  opacity: 0.18;
+  pointer-events:none;
+}
+
+/* Button: neon edge on hover */
+.btn-primary{
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::after{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(0,255,140,0.25), transparent);
+  opacity: 0;
+  filter: blur(10px);
+  transition: opacity .2s ease;
+  pointer-events:none;
+}
+.btn-primary:hover::after{ opacity: 1; }
+
+
+/* ===== Left panel FX upgrade (v9) ===== */
+.calc-left{
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,255,255,0.68));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 18px 45px rgba(0,0,0,0.10);
+  transform: translateZ(0);
+}
+
+.calc-left::before{
+  content:"";
+  position:absolute;
+  inset:-60% -40%;
+  background:
+    radial-gradient(circle at 20% 25%, rgba(0,255,140,0.18), transparent 55%),
+    radial-gradient(circle at 85% 15%, rgba(0,200,255,0.10), transparent 55%),
+    radial-gradient(circle at 50% 85%, rgba(255,255,255,0.18), transparent 55%);
+  filter: blur(18px);
+  opacity: .95;
+  pointer-events:none;
+}
+
+.calc-left::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(0,0,0,0.00) 0px,
+      rgba(0,0,0,0.00) 14px,
+      rgba(0,0,0,0.025) 15px,
+      rgba(0,0,0,0.00) 26px);
+  opacity: .22;
+  pointer-events:none;
+  mix-blend-mode: soft-light;
+}
+
+.calc-left:hover{
+  box-shadow: 0 22px 60px rgba(0,0,0,0.14);
+}
+
+/* Make fields feel like "cards" */
+.calc-field{
+  border-radius: 14px;
+}
+
+/* Stronger neon frame around selected field using conic gradient */
+
+  to   { transform: rotate(360deg); }
+}
+
+.calc-field.is-selected{
+  z-index: 1;
+}
+
+
+
+/* Keep inner glow */
+.calc-field.is-selected,
+.calc-field.is-selected .calc-input,
+.calc-field.is-selected .calc-select{
+  background: rgba(0,255,140,0.045);
+}
+
+/* Add subtle inner highlight when focused */
+.calc-left .calc-input:focus,
+.calc-left .calc-select:focus{
+  box-shadow:
+    0 0 0 1px rgba(0,255,140,0.45),
+    0 0 22px rgba(0,255,140,0.20),
+    inset 0 0 0 1px rgba(255,255,255,0.18);
+}
+
+/* Buttons: add soft glow on the panel only (not changing colors) */
+.calc-left .btn-primary{
+  box-shadow: 0 12px 26px rgba(181,58,50,0.22);
+}
+.calc-left .btn-secondary{
+  box-shadow: 0 10px 22px rgba(0,0,0,0.06);
+}
+
+
+/* ===== Calm premium neon (v10) ===== */
+
+/* Static premium border instead of spinning effect */
+.calc-field.is-selected{
+  border: 1px solid rgba(0,255,140,0.55) !important;
+  box-shadow:
+    0 0 0 1px rgba(0,255,140,0.25),
+    0 8px 24px rgba(0,255,140,0.12),
+    inset 0 0 0 1px rgba(255,255,255,0.15);
+  background: rgba(0,255,140,0.035);
+  transition: box-shadow .25s ease, border-color .25s ease;
+}
+
+/* Soft pulse only when user clicks calculate */
+@keyframes calmPulse{
+  0%   { box-shadow: 0 0 0 rgba(0,255,140,0); }
+  50%  { box-shadow: 0 0 38px rgba(0,255,140,0.18); }
+  100% { box-shadow: 0 0 0 rgba(0,255,140,0); }
+}
+
+.calc-field.pulse{
+  animation: calmPulse .8s ease;
+}
+
+
+/* ===== Success green glass effect (v11) ===== */
+
+.calc-right.success{
+  background:
+    linear-gradient(180deg, rgba(0,255,140,0.10), rgba(0,255,140,0.06)),
+    linear-gradient(145deg,#1f1f22,#2a2a2f);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 25px 60px rgba(0,255,140,0.18),
+    0 0 40px rgba(0,255,140,0.12);
+  transition: all .4s ease;
+}
+
+.calc-right.success .capital-box,
+.calc-right.success .kpi{
+  background: linear-gradient(
+      180deg,
+      rgba(0,255,140,0.08),
+      rgba(255,255,255,0.04)
+  );
+  border: 1px solid rgba(0,255,140,0.25);
+  box-shadow:
+    0 10px 35px rgba(0,255,140,0.12),
+    inset 0 0 0 1px rgba(255,255,255,0.12);
+  transition: all .4s ease;
+}
+
+
+/* ===== Premium form UI (v12) ===== */
+.calc-left{
+  background: linear-gradient(180deg, rgba(255,255,255,0.86), rgba(255,255,255,0.74));
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.calc-left label{
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: rgba(18,18,20,0.62);
+}
+
+.calc-left .calc-row{ gap: 18px; }
+
+.calc-input, .calc-select{
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.10);
+  background: rgba(255,255,255,0.86);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.45);
+  transition: border-color .2s ease, box-shadow .2s ease, transform .15s ease;
+}
+
+.calc-input:focus, .calc-select:focus{
+  border-color: rgba(0,0,0,0.18);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.08),
+    0 0 0 4px rgba(0,255,140,0.10);
+}
+
+/* Custom select arrow */
+.calc-select{
+  appearance: none;
+  -webkit-appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(0,0,0,0.55) 50%),
+    linear-gradient(135deg, rgba(0,0,0,0.55) 50%, transparent 50%),
+    linear-gradient(to right, rgba(0,0,0,0.10), rgba(0,0,0,0.10));
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 12px) 50%,
+    calc(100% - 40px) 50%;
+  background-size:
+    6px 6px,
+    6px 6px,
+    1px 18px;
+  background-repeat: no-repeat;
+  padding-right: 54px;
+}
+
+.calc-left .btn-primary,
+.calc-left .btn-secondary{
+  height: 46px;
+  border-radius: 999px;
+  padding: 0 18px;
+}
+
+.calc-left .btn-secondary{
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(0,0,0,0.10);
+}
+
+/* Tone down aggressive neon on form */
+.calc-field.is-selected,
+.calc-field.is-selected .calc-input,
+.calc-field.is-selected .calc-select{
+  border-color: rgba(0,0,0,0.16) !important;
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.08),
+    0 0 0 4px rgba(0,255,140,0.10) !important;
+}
+
+.calc-left::after{ opacity: .12; }
+
+
+/* ===== Premium accent color upgrade (v13) ===== */
+:root{
+  --accent-main: #00c896;       /* emerald */
+  --accent-soft: rgba(0,200,150,0.18);
+  --accent-glow: rgba(0,200,150,0.28);
+}
+
+/* Left form highlight */
+.calc-field.is-selected,
+.calc-field.is-selected .calc-input,
+.calc-field.is-selected .calc-select{
+  border-color: var(--accent-main) !important;
+  box-shadow:
+    0 10px 28px rgba(0,0,0,0.08),
+    0 0 0 4px var(--accent-soft) !important;
+}
+
+/* Focus state */
+.calc-input:focus, .calc-select:focus{
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.08),
+    0 0 0 4px var(--accent-soft);
+}
+
+/* Right panel success persistent glass - slightly deeper emerald */
+.calc-right.success{
+  background:
+    linear-gradient(180deg, rgba(0,200,150,0.12), rgba(0,200,150,0.07)),
+    linear-gradient(145deg,#1f1f22,#2a2a2f);
+  box-shadow:
+    0 25px 60px rgba(0,200,150,0.20),
+    0 0 40px rgba(0,200,150,0.16);
+}
+
+.calc-right.success .capital-box,
+.calc-right.success .kpi{
+  border: 1px solid rgba(0,200,150,0.35);
+  box-shadow:
+    0 14px 38px rgba(0,200,150,0.16),
+    inset 0 0 0 1px rgba(255,255,255,0.10);
+}
+
+
+/* ===== Deep Blue premium theme (v14) ===== */
+:root{
+  --accent-main: #2f6bff;          /* deep blue */
+  --accent-soft: rgba(47,107,255,0.16);
+  --accent-glow: rgba(47,107,255,0.26);
+}
+
+/* Left form highlight */
+.calc-field.is-selected,
+.calc-field.is-selected .calc-input,
+.calc-field.is-selected .calc-select{
+  border-color: var(--accent-main) !important;
+  box-shadow:
+    0 10px 28px rgba(0,0,0,0.08),
+    0 0 0 4px var(--accent-soft) !important;
+}
+
+.calc-input:focus, .calc-select:focus{
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.08),
+    0 0 0 4px var(--accent-soft);
+}
+
+/* Right panel success (persistent) */
+.calc-right.success{
+  background:
+    linear-gradient(180deg, rgba(47,107,255,0.14), rgba(47,107,255,0.08)),
+    linear-gradient(145deg,#1f1f22,#2a2a2f);
+  box-shadow:
+    0 25px 60px rgba(47,107,255,0.20),
+    0 0 44px rgba(47,107,255,0.16);
+}
+
+.calc-right.success .capital-box,
+.calc-right.success .kpi{
+  border: 1px solid rgba(47,107,255,0.38);
+  box-shadow:
+    0 14px 38px rgba(47,107,255,0.16),
+    inset 0 0 0 1px rgba(255,255,255,0.10);
+}
+
+
+/* ===== Royal Blue (v19) ===== */
+:root{
+  --accent-main: #1f4fff;
+  --accent-soft: rgba(31,79,255,0.18);
+  --accent-glow: rgba(31,79,255,0.30);
+}
+.calc-right.success{
+  background:
+    linear-gradient(180deg, rgba(31,79,255,0.22), rgba(31,79,255,0.12)),
+    linear-gradient(145deg,#1a1b20,#24262c);
+  box-shadow:
+    0 30px 80px rgba(31,79,255,0.30),
+    0 0 60px rgba(31,79,255,0.22);
+}
+.calc-right.success .capital-box,
+.calc-right.success .kpi{
+  background: linear-gradient(180deg, rgba(31,79,255,0.10), rgba(255,255,255,0.03));
+  border: 1px solid rgba(31,79,255,0.50);
+  box-shadow:
+    0 18px 50px rgba(31,79,255,0.22),
+    inset 0 0 0 1px rgba(255,255,255,0.10);
+}
+
+
+/* ===== Emotional WOW impulse (v22) ===== */
+@keyframes wowFlash {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(31,79,255,0); }
+  22%{ transform: scale(1.01); box-shadow: 0 0 90px rgba(31,79,255,0.34), 0 0 26px rgba(31,79,255,0.18); }
+  55%{ transform: scale(1.00); box-shadow: 0 0 55px rgba(31,79,255,0.18); }
+  100%{ transform: scale(1); box-shadow: 0 0 0 rgba(31,79,255,0); }
+}
+@keyframes wowSweep {
+  0% { transform: translateX(-140%) rotate(12deg); opacity: 0; }
+  12%{ opacity: 1; }
+  100%{ transform: translateX(140%) rotate(12deg); opacity: 0; }
+}
+@keyframes wowPop {
+  0% { transform: translateY(6px) scale(.98); opacity: .0; }
+  100%{ transform: translateY(0) scale(1); opacity: 1; }
+}
+@keyframes kpiPop {
+  0%{ transform: translateY(6px) scale(.98); filter: brightness(1); }
+  100%{ transform: translateY(0) scale(1); filter: brightness(1.06); }
+}
+
+/* Support both classnames (some builds use principle-right) */
+.calc-right, .principle-right{
+  position: relative;
+  overflow: hidden;
+}
+
+/* Light sweep layer */
+.calc-right::after, .principle-right::after{
+  content:"";
+  position:absolute;
+  inset:-40% -60%;
+  background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.16) 50%, transparent 60%);
+  transform: translateX(-140%) rotate(12deg);
+  opacity: 0;
+  pointer-events:none;
+}
+
+/* Subtle glow texture */
+.calc-right::before, .principle-right::before{
+  content:"";
+  position:absolute;
+  inset:-30%;
+  background: radial-gradient(circle at 25% 20%, rgba(31,79,255,0.22), transparent 55%),
+              radial-gradient(circle at 85% 35%, rgba(31,79,255,0.14), transparent 55%);
+  opacity: 0;
+  filter: blur(16px);
+  pointer-events:none;
+}
+
+/* WOW trigger */
+.calc-right.success.wow, .principle-right.success.wow{
+  animation: wowFlash 1.05s ease;
+}
+.calc-right.success.wow::after, .principle-right.success.wow::after{
+  opacity: 1;
+  animation: wowSweep .9s ease;
+}
+.calc-right.success.wow::before, .principle-right.success.wow::before{
+  opacity: 1;
+}
+
+/* Badge */
+.wow-badge{
+  position:absolute;
+  top: 16px;
+  right: 16px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius: 999px;
+  background: rgba(12,14,20,0.55);
+  border: 1px solid rgba(31,79,255,0.40);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: translateY(6px) scale(.98);
+  pointer-events:none;
+}
+.wow-badge .dot{
+  width: 10px; height: 10px; border-radius: 50%;
+  background: rgba(31,79,255,0.95);
+  box-shadow: 0 0 16px rgba(31,79,255,0.45);
+}
+.wow-badge .txt{
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.86);
+}
+.calc-right.success.wow .wow-badge,
+.principle-right.success.wow .wow-badge{
+  opacity: 1;
+  animation: wowPop .35s ease forwards;
+}
+
+/* KPI pop cascade */
+.calc-right.success.wow .kpi,
+.principle-right.success.wow .kpi{
+  animation: kpiPop .45s ease both;
+}
+.calc-right.success.wow .kpi:nth-child(1),
+.principle-right.success.wow .kpi:nth-child(1){ animation-delay: .05s; }
+.calc-right.success.wow .kpi:nth-child(2),
+.principle-right.success.wow .kpi:nth-child(2){ animation-delay: .10s; }
+.calc-right.success.wow .kpi:nth-child(3),
+.principle-right.success.wow .kpi:nth-child(3){ animation-delay: .15s; }
+
+/* Tone down aggressive selection outline on left */
+.calc-field.is-selected,
+.calc-field.is-selected .calc-input,
+.calc-field.is-selected .calc-select{
+  box-shadow: 0 0 0 4px rgba(31,79,255,0.10) !important;
+  border-color: rgba(31,79,255,0.45) !important;
+}
+
+
+/* ===== Extra WOW: ripple + number count glow (v23) ===== */
+@keyframes wowRipple {
+  0% { transform: scale(0.65); opacity: 0.0; }
+  18%{ opacity: 0.65; }
+  100%{ transform: scale(1.45); opacity: 0.0; }
+}
+@keyframes numGlow {
+  0% { text-shadow: 0 0 0 rgba(31,79,255,0); filter: brightness(1); }
+  35%{ text-shadow: 0 0 28px rgba(31,79,255,0.22); filter: brightness(1.10); }
+  100%{ text-shadow: 0 0 0 rgba(31,79,255,0); filter: brightness(1); }
+}
+
+/* Ripple ring on success */
+.calc-right.success.wow .capital-box::after,
+.principle-right.success.wow .capital-box::after{
+  content:"";
+  position:absolute;
+  inset:-14px;
+  border-radius: 18px;
+  border: 1px solid rgba(31,79,255,0.55);
+  box-shadow: 0 0 0 1px rgba(31,79,255,0.18), 0 0 60px rgba(31,79,255,0.10);
+  opacity: 0;
+  pointer-events:none;
+  animation: wowRipple .9s ease;
+}
+
+/* Animate key numbers */
+.calc-right.success.wow .capital-box .v,
+.principle-right.success.wow .capital-box .v,
+.calc-right.success.wow .kpi .v,
+.principle-right.success.wow .kpi .v{
+  animation: numGlow .9s ease;
+}
+
+/* Small spark lines (subtle) */
+@keyframes sparkFly{
+  0%{ transform: translate(0,0) rotate(0deg); opacity: 0; }
+  15%{ opacity: .75; }
+  100%{ transform: translate(var(--dx), var(--dy)) rotate(18deg); opacity: 0; }
+}
+.calc-right.success.wow .wow-sparks,
+.principle-right.success.wow .wow-sparks{
+  opacity: 1;
+}
+.wow-sparks{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity: 0;
+}
+.wow-sparks i{
+  position:absolute;
+  width: 34px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(31,79,255,0), rgba(31,79,255,0.95), rgba(31,79,255,0));
+  filter: blur(.2px);
+  opacity: 0;
+  animation: sparkFly .7s ease forwards;
+  box-shadow: 0 0 18px rgba(31,79,255,0.25);
+}
+
+
+/* ===== WOW BOLDER (v24) ===== */
+@keyframes wowFlash {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(31,79,255,0); filter: brightness(1); }
+  18%{ transform: scale(1.02); box-shadow: 0 0 140px rgba(31,79,255,0.48), 0 0 40px rgba(31,79,255,0.22); filter: brightness(1.06); }
+  45%{ transform: scale(1.008); box-shadow: 0 0 90px rgba(31,79,255,0.26); filter: brightness(1.02); }
+  100%{ transform: scale(1); box-shadow: 0 0 0 rgba(31,79,255,0); filter: brightness(1); }
+}
+@keyframes kpiPop {
+  0%{ transform: translateY(14px) scale(.98); filter: brightness(1); }
+  70%{ transform: translateY(-2px) scale(1.02); filter: brightness(1.08); }
+  100%{ transform: translateY(0) scale(1); filter: brightness(1.03); }
+}
+.calc-right::after, .principle-right::after{
+  background: linear-gradient(120deg, transparent 38%, rgba(255,255,255,0.22) 50%, transparent 62%);
+}
+.calc-right::before, .principle-right::before{
+  background:
+    radial-gradient(circle at 18% 20%, rgba(31,79,255,0.30), transparent 58%),
+    radial-gradient(circle at 88% 35%, rgba(31,79,255,0.20), transparent 58%),
+    radial-gradient(circle at 55% 75%, rgba(31,79,255,0.12), transparent 60%);
+}
+.calc-right.success.wow .capital-box::after,
+.principle-right.success.wow .capital-box::after{
+  border: 1px solid rgba(31,79,255,0.70);
+  box-shadow: 0 0 0 1px rgba(31,79,255,0.22), 0 0 90px rgba(31,79,255,0.18);
+  animation-duration: 1.05s;
+}
+.wow-badge{
+  border-color: rgba(31,79,255,0.55);
+  box-shadow: 0 18px 44px rgba(0,0,0,0.42);
+}
+.wow-badge .dot{ box-shadow: 0 0 22px rgba(31,79,255,0.60); }
+
+
+/* ===== Persistent SUCCESS state (Option A) (v25) ===== */
+.calc-right.success, .principle-right.success{
+  border: 1px solid rgba(31,79,255,0.28);
+  box-shadow:
+    0 0 70px rgba(31,79,255,0.16),
+    0 0 140px rgba(31,79,255,0.08),
+    0 28px 70px rgba(0,0,0,0.42);
+}
+
+.calc-right.success .capital-box,
+.principle-right.success .capital-box{
+  background: linear-gradient(135deg, rgba(31,79,255,0.10), rgba(255,255,255,0.03));
+  border-color: rgba(31,79,255,0.22);
+}
+
+.calc-right.success .kpi,
+.principle-right.success .kpi{
+  background: linear-gradient(135deg, rgba(31,79,255,0.07), rgba(255,255,255,0.02));
+  border-color: rgba(31,79,255,0.18);
+}
+
+.calc-right.success .capital-box .v,
+.principle-right.success .capital-box .v,
+.calc-right.success .kpi .v,
+.principle-right.success .kpi .v{
+  text-shadow: 0 0 24px rgba(31,79,255,0.14);
+}
+
 </style>
 </head>
 
 <body>
 
-<section class="hero">
-    <h1>Недвижимость как инструмент формирования капитала</h1>
-</section>
+<div class="topbar">
+  <div class="nav">
+    <div class="logo"><span class="rg"><span class="mark" aria-hidden="true"></span><span class="title">RealGrow</span></span><span class="tag">— реальный рост</span></div>
+    <div class="navlinks">
+      <a href="#about">Подход</a>
+      <a href="#capital">Стратегия</a>
+      <a href="#how">Процесс</a>
+      <a href="#calculator">Расчёт</a>
+      <a href="#contact">Контакт</a>
+    </div>
+    <div class="navcta"><a href="#contact" class="nav-contact">Контакт</a></div>
+  </div>
+</div>
 
-<section class="capital">
-    <h2>Инвестиционный капитал из сделки</h2>
-    <p class="subtitle">Как формируется ваш инвестиционный капитал</p>
 
-    <div class="capital-grid">
-        <div class="card">
-            <h3>1. Сделка по недвижимости</h3>
-            <p>Покупка объекта с полным сопровождением.</p>
+<!-- HERO -->
+<header class="hero">
+  <div class="container wide">
+    <div class="hero-grid">
+      <div class="hero-image reveal slow" data-reveal>
+        <img src="hero.jpg" alt="Агент и клиент — одна сторона сделки">
+      </div>
+
+      <div class="hero-copy">
+        <div class="kicker reveal" data-reveal>Недвижимость • партнёрство • капитал</div>
+        <div class="h1 reveal" data-reveal>Агент и клиент — одна сторона сделки</div>
+
+        <div class="hero-sub p muted reveal" data-reveal>
+          Недвижимость без конфликта интересов.<br>
+          Я действую так, как если бы принимал решение для себя — <strong>и для вас</strong>.
         </div>
 
-        <div class="card">
-            <h3>2. Формирование капитала</h3>
-            <p>Часть комиссии перераспределяется в пользу клиента и формирует стартовый капитал.</p>
+        <div class="hero-sub p muted reveal" data-reveal style="margin-top:12px;">
+          <strong>Я работаю с недвижимостью как с инструментом создания капитала — вместе с клиентом.</strong>
         </div>
 
-        <div class="card">
-            <h3>3. Управление капиталом</h3>
-            <p>Сценарная модель роста по выбранной стратегии.</p>
+        <div class="buttons reveal" data-reveal>
+          <a class="btn btn-primary" href="#contact">
+            <span class="btn-icon">✦</span> Обсудить задачу
+          </a>
+          <a class="btn btn-secondary" href="#capital">
+            <span class="btn-icon">↘</span> Мой подход
+          </a>
         </div>
+      </div>
+    </div>
+  </div>
+</header>
 
-        <div class="card">
-            <h3>4. Реализация дохода</h3>
-            <p>Направление результата на ипотеку, реинвест или пассивный доход.</p>
-        </div>
+<!-- ABOUT -->
+<section class="section soft" id="about">
+  <div class="container">
+    <div class="center">
+      <div class="kicker reveal" data-reveal>Принцип работы</div>
+      <div class="h2 reveal" data-reveal>Партнёрство вместо давления</div>
     </div>
 
-    <a href="#calc" class="cta-button">Рассчитать ваш капитал</a>
+    <div class="principle-grid reveal slow" data-reveal>
+      <div class="principle-left">
+        <p class="p">
+          Я не заинтересован «просто закрыть сделку». Моя задача — чтобы вы были уверены в решении <strong>не только сегодня</strong>, но и спустя годы.
+          Мы выбираем не «красиво на показе», а <strong>правильно по стратегии</strong>: район, ликвидность, сценарии выхода.
+        </p>
+      </div>
 
-    <div class="note">
-        Сценарный расчёт при благоприятной рыночной динамике. Не является гарантией доходности.
+      <div class="principle-right">
+  <div class="wow-badge" aria-hidden="true"><span class="dot"></span><span class="txt">Расчёт готов</span></div>
+  <div class="wow-sparks" aria-hidden="true"></div>
+        <div class="principle-item">
+          <span class="principle-dot" aria-hidden="true"></span>
+          <div>
+            <div class="principle-title">Без давления</div>
+            <div class="principle-text">Решение принимаете вы — я даю ясную картину и альтернативы.</div>
+          </div>
+        </div>
+
+        <div class="principle-item">
+          <span class="principle-dot" aria-hidden="true"></span>
+          <div>
+            <div class="principle-title">Прозрачные шаги</div>
+            <div class="principle-text">План сделки и ключевые моменты — заранее, без сюрпризов на финише.</div>
+          </div>
+        </div>
+
+        <div class="principle-item">
+          <span class="principle-dot" aria-hidden="true"></span>
+          <div>
+            <div class="principle-title">Долгий горизонт</div>
+            <div class="principle-text">Думаем о том, что будет с объектом через 1–3 года, а не только «сейчас».</div>
+          </div>
+        </div>
+
+        <div class="principle-footer">
+          <strong>Сделка — это не финал.</strong> Это точка входа в более сильное финансовое положение.
+        </div>
+      </div>
     </div>
+  </div>
 </section>
 
-<section class="calculator" id="calc">
-    <h2>Расчёт инвестиционного капитала</h2>
+<!-- CAPITAL -->
+<section class="section" id="capital" class="amount-range">
+  <div class="container">
+    <div class="center">
+      <div class="kicker reveal" data-reveal>Стратегия</div>
+      <div class="h2 reveal" data-reveal>Недвижимость как инструмент капитала</div>
+      <div class="p muted reveal" data-reveal style="max-width:860px;margin:0 auto;">
+        Мой основной опыт — создание и управление капиталом. Недвижимость для меня — один из самых надёжных
+        инструментов долгосрочного роста.
+      </div>
+    </div>
 
-    <input type="number" id="price" placeholder="Введите стоимость объекта">
-    <br>
-    <button class="cta-button" onclick="calculate()">Рассчитать</button>
+    <div class="grid3">
+      <div class="card reveal" data-reveal>
+        <div class="num">1000</div>
+        <h3>Путь практики и масштаба</h3>
+        <p>Осознанная цель: пройти 1000 сделок, чтобы глубоко понять рынок и выстроить систему.</p>
+      </div>
 
-    <div class="result" id="result"></div>
+      <div class="card reveal" data-reveal>
+        <div class="num">01</div>
+        <h3>Совпадение интересов</h3>
+        <p>Я выстраиваю работу так, чтобы агент и клиент были заинтересованы в одном финансовом результате.</p>
+      </div>
+
+      <div class="card reveal" data-reveal>
+        <div class="num">∞</div>
+        <h3>Долгий горизонт</h3>
+        <p>Решение должно быть правильным “после”. Не спешка, а качество и защита клиента.</p>
+      </div>
+    </div>
+
+    <ul class="bullets reveal" data-reveal>
+      <li>Стратегия покупки/продажи строится от цели клиента, а не от “объекта, который надо закрыть”.</li>
+      <li>Лучшее решение иногда — подождать. И это тоже результат работы.</li>
+      <li>Фокус — на спокойной сделке и понятном маршруте до результата.</li>
+    </ul>
+  </div>
 </section>
 
-<footer>
-    © Сергей | Недвижимость + Капитал
-</footer>
+<!-- CLOSURE (философия) -->
+<section class="section soft" id="closure">
+  <div class="container">
+    <div class="center">
+      <div class="kicker reveal" data-reveal>Завершённость пути</div>
+      <div class="h2 reveal" data-reveal>Закрыть цикл и вернуть ценность</div>
+      <div class="quote reveal" data-reveal style="max-width:920px;margin:22px auto 0;">
+        <div class="mark">“</div>
+        <p class="p">
+          Для меня этот путь не бесконечен. Этап практики и масштаба — осознанный: я иду его до конца,
+          чтобы выстроить систему совместного результата. После завершения этапа я планирую закрыть цикл
+          и вернуть часть созданной ценности тем, с кем прошёл этот путь вместе.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section class="section" id="how">
+  <div class="container">
+    <div class="center">
+      <div class="kicker reveal" data-reveal>Процесс</div>
+      <div class="h2 reveal" data-reveal>Как я работаю</div>
+      <div class="p muted reveal" data-reveal style="max-width:860px;margin:0 auto;">
+        Прозрачно по шагам: вы понимаете, что происходит, какие есть варианты и почему мы выбираем именно это решение.
+      </div>
+    </div>
+
+    <div class="grid3">
+      <div class="card reveal" data-reveal>
+        <div class="num">01</div>
+        <h3>Диагностика</h3>
+        <p>Цели, сроки, бюджет, риски. Фиксируем критерии, чтобы не «плыть» в процессе.</p>
+      </div>
+
+      <div class="card reveal" data-reveal>
+        <div class="num">02</div>
+        <h3>Проверка и стратегия</h3>
+        <p>Подбор/оценка, проверки, переговоры. Решение принимается осознанно, без давления.</p>
+      </div>
+
+      <div class="card reveal" data-reveal>
+        <div class="num">03</div>
+        <h3>Сделка под контролем</h3>
+        <p>Документы, этапы, сопровождение до финала. Максимально спокойно и профессионально.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CALCULATOR -->
+<section class="section" id="calculator">
+  <div class="container">
+    <div class="center">
+      <div class="kicker reveal" data-reveal>Расчёт</div>
+      <h2 class="h2 reveal" data-reveal>Рассчитайте ваш инвестиционный капитал</h2>
+      <p class="lead reveal" data-reveal>
+        Введите стоимость объекта и выберите тип сделки — вы увидите сумму, которая формирует стартовый капитал, а также сценарии роста 40% / 100% / 200% в год.
+      </p>
+    </div>
+
+    <div class="calc-wrap">
+      <div class="calc-panel reveal" data-reveal>
+        <div class="calc-row">
+          <div class="calc-field">
+            <label for="calcPrice">Стоимость объекта, ₽</label>
+            <input class="calc-input" id="calcPrice" type="number" inputmode="numeric" placeholder="Например: 12000000" min="0" step="10000">
+          </div>
+
+          <div class="calc-field">
+            <label for="calcDeal">Тип сделки</label>
+            <select class="calc-select" id="calcDeal">
+              <option value="" selected disabled>Выберите…</option>
+              <option value="newbuild">Новостройка</option>
+              <option value="sec_seller">Вторичка — продавец (2%)</option>
+              <option value="sec_buyer">Вторичка — покупатель (1.5%)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="calc-row">
+          <div class="calc-field" style="grid-column: 1 / -1;">
+            <label for="calcYears">Горизонт</label>
+            <select class="calc-select" id="calcYears">
+              <option value="1" selected>1 год</option>
+              <option value="2">2 года</option>
+              <option value="3">3 года</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="calc-actions">
+          <button class="calc-btn primary" type="button" id="calcRun">Рассчитать</button>
+          <button class="calc-btn" type="button" id="calcReset">Очистить</button>
+        </div>
+      </div>
+
+      <div class="calc-panel darkish reveal" data-reveal>
+        <div class="calc-kpis">
+          <div class="kpi">
+            <div class="k">Ваш стартовый капитал</div>
+            <div class="v" id="kpiBonus">—</div>
+            <div class="s">Сумма, формирующая инвестиционный капитал из сделки.</div>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi">
+              <div class="k">40% / год</div>
+              <div class="v" id="kpi40">—</div>
+              <div class="s">на выбранный горизонт</div>
+            </div>
+            <div class="kpi">
+              <div class="k">100% / год</div>
+              <div class="v" id="kpi100">—</div>
+              <div class="s">на выбранный горизонт</div>
+            </div>
+            <div class="kpi">
+              <div class="k">200% / год</div>
+              <div class="v" id="kpi200">—</div>
+              <div class="s">на выбранный горизонт</div>
+            </div>
+          </div>
+
+          <div class="calc-note">
+            Сценарный расчёт при благоприятной рыночной динамике. Не является гарантией доходности.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CONTACT -->
+<section class="section dark" id="contact">
+  <div class="container">
+    <div class="center">
+      <div class="kicker reveal" data-reveal>Контакт</div>
+      <div class="h2 reveal" data-reveal>Недвижимость — это решение, а не эмоция</div>
+      <div class="p muted reveal" data-reveal style="max-width:860px;margin:0 auto;">
+        Если вам близок партнёрский и стратегический подход — давайте обсудим вашу задачу.
+      </div>
+
+      <div class="buttons reveal" data-reveal style="justify-content:center;">
+        <a class="btn btn-primary" href="tel:+70000000000"><span class="btn-icon">☎</span> Позвонить</a>
+        <a class="btn btn-secondary" href="#"><span class="btn-icon">✉</span> Telegram</a>
+      </div>
+
+      <div class="p muted reveal" data-reveal style="margin-top:16px; font-size:12px; opacity:.75;">
+        Подставь свои контакты внизу файла: телефон и ссылку Telegram.
+      </div>
+    </div>
+  </div>
+</section>
 
 <script>
-function calculate() {
-    let price = document.getElementById("price").value;
-    if (!price) return;
+(function(){
+  const els = Array.from(document.querySelectorAll('[data-reveal]'));
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold: 0.14});
+  els.forEach(el=>io.observe(el));
+})();
 
-    let bonus = price * 0.03; // внутренняя формула
-    let scenario40 = bonus * 1.4;
-    let scenario100 = bonus * 2;
-    let scenario200 = bonus * 3;
+</script>
 
-    document.getElementById("result").innerHTML =
-        "Ваш стартовый капитал: <b>" + Math.round(bonus).toLocaleString() + " ₽</b><br><br>" +
-        "Сценарий 40%: " + Math.round(scenario40).toLocaleString() + " ₽<br>" +
-        "Сценарий 100%: " + Math.round(scenario100).toLocaleString() + " ₽<br>" +
-        "Сценарий 200%: " + Math.round(scenario200).toLocaleString() + " ₽";
+
+<!-- Ambient Sound -->
+<div class="sound-toggle" id="soundToggle">
+  <div class="icon">♫</div>
+  <span>Включить атмосферу</span>
+</div>
+
+<audio id="ambientAudio" loop preload="auto">
+  <source src="ambient.mp3" type="audio/mpeg">
+</audio>
+
+
+<script>
+(function(){
+  const btn = document.getElementById('soundToggle');
+  const audio = document.getElementById('ambientAudio');
+  let playing = false;
+
+  btn.addEventListener('click', () => {
+    if(!playing){
+      audio.volume = 0.5;   // 50%
+      audio.play();
+      btn.classList.add('active');
+      btn.querySelector('span').textContent = 'Выключить атмосферу';
+      playing = true;
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
+      btn.classList.remove('active');
+      btn.querySelector('span').textContent = 'Включить атмосферу';
+      playing = false;
+    }
+  });
+})();
+
+function formatRub(n){
+  return Math.round(n).toLocaleString("ru-RU") + " ₽";
 }
+function formatRange(minV, maxV){
+  if (Math.abs(minV - maxV) < 0.5) return formatRub(minV);
+  return formatRub(minV) + " — " + formatRub(maxV);
+}
+
+function calculate() {
+  const price = parseFloat(document.getElementById("price").value);
+  const type = document.getElementById("type").value;
+  const years = parseInt(document.getElementById("years")?.value || "1", 10);
+
+  if (!price || price <= 0) return;
+
+  const k = 0.165; // 55% * 30% (скрыто)
+
+  let bonusMin, bonusMax, explain;
+
+  if (type === "new") {
+    // Новостройка: условия варьируются (3–5% скрыто)
+    const cMin = 0.03, cMax = 0.05;
+    bonusMin = price * cMin * k;
+    bonusMax = price * cMax * k;
+    explain = "Для новостроек сумма может отличаться по условиям конкретного объекта. Точная сумма — после подбора.";
+  } else if (type === "sell") {
+    const c = 0.02;
+    bonusMin = bonusMax = price * c * k;
+    explain = "Сумма формируется из условий сделки и становится основой вашего инвестиционного капитала.";
+  } else {
+    const c = 0.015;
+    bonusMin = bonusMax = price * c * k;
+    explain = "Сумма формируется из условий сделки и становится основой вашего инвестиционного капитала.";
+  }
+
+  // Capital
+  const capEl = document.getElementById("capital");
+  if (capEl) capEl.textContent = formatRange(bonusMin, bonusMax);
+
+  // Scenarios (range only for newbuild)
+  const sc40Min = bonusMin * Math.pow(1.4, years);
+  const sc40Max = bonusMax * Math.pow(1.4, years);
+
+  const sc100Min = bonusMin * Math.pow(2, years);
+  const sc100Max = bonusMax * Math.pow(2, years);
+
+  const sc200Min = bonusMin * Math.pow(3, years);
+  const sc200Max = bonusMax * Math.pow(3, years);
+
+  const el40 = document.getElementById("sc40");
+  const el100 = document.getElementById("sc100");
+  const el200 = document.getElementById("sc200");
+
+  if (el40) el40.textContent = formatRange(sc40Min, sc40Max);
+  if (el100) el100.textContent = formatRange(sc100Min, sc100Max);
+  if (el200) el200.textContent = formatRange(sc200Min, sc200Max);
+
+  const exEl = document.getElementById("explainText");
+  if (exEl) exEl.textContent = explain;
+}
+
+function resetCalc() {
+  const priceEl = document.getElementById("price");
+  if (priceEl) priceEl.value = "";
+  const capEl = document.getElementById("capital");
+  if (capEl) capEl.textContent = "—";
+  const el40 = document.getElementById("sc40");
+  const el100 = document.getElementById("sc100");
+  const el200 = document.getElementById("sc200");
+  if (el40) el40.textContent = "—";
+  if (el100) el100.textContent = "—";
+  if (el200) el200.textContent = "—";
+  const exEl = document.getElementById("explainText");
+  if (exEl) exEl.textContent = "Сумма формируется из условий сделки и становится основой вашего инвестиционного капитала.";
+}
+
+</script>
+
+
+
+<script>
+(function(){
+  const elPrice = document.getElementById('calcPrice');
+  const elDeal = document.getElementById('calcDeal');
+  const elYears = document.getElementById('calcYears');
+  const btnRun = document.getElementById('calcRun');
+  const btnReset = document.getElementById('calcReset');
+
+  const kpiBonus = document.getElementById('kpiBonus');
+  const kpi40 = document.getElementById('kpi40');
+  const kpi100 = document.getElementById('kpi100');
+  const kpi200 = document.getElementById('kpi200');
+
+  if(!elPrice || !btnRun) return;
+
+  const fmt = (n) => {
+    if(!isFinite(n)) return '—';
+    return Math.round(n).toLocaleString('ru-RU') + ' ₽';
+  };
+
+  // Внутренний коэффициент: клиенту НЕ показываем.
+  // Бонус = 30% от комиссии агентства.
+  const COMPANY_SPLIT = 0.55; // доля Сергея от комиссии (55%)
+  const CLIENT_SPLIT  = 0.30; // доля клиента от доли Сергея (30%)
+  const SHARE = COMPANY_SPLIT * CLIENT_SPLIT; // 0.165 от комиссии агентства
+
+  const compound = (principal, rate, years) => principal * Math.pow(1 + rate, years);
+
+  function computeBonus(price, feePercent){
+    return price * (feePercent/100) * SHARE;
+  }
+
+  function render(price){
+    const years = parseInt(elYears.value || '1', 10);
+    const deal = elDeal.value;
+
+    if(!price || price <= 0 || !deal){
+      kpiBonus.textContent = '—'; kpiBonus.removeAttribute('data-range');
+      kpi40.textContent = '—';
+      kpi100.textContent = '—';
+      kpi200.textContent = '—';
+      return;
+    }
+
+
+
+    const MIN_PRICE = 1000000; // минимум для адекватного расчёта
+    if (price < MIN_PRICE){
+      if(outBonus) outBonus.textContent = "Введите сумму от 1 000 000 ₽";
+      if(out40) out40.textContent = "—";
+      if(out100) out100.textContent = "—";
+      if(out200) out200.textContent = "—";
+      rightPanel?.classList.remove("success");
+      return;
+    }
+
+    // Комиссия скрыта: определяем её по типу сделки.
+    if(deal === 'newbuild'){
+      // Новостройка: считаем диапазон бонуса (скрытая комиссия, без отображения процентов).
+      const feeMin = 3.0;
+      const feeMax = 5.0;
+      const bMin = computeBonus(price, feeMin);
+      const bMax = computeBonus(price, feeMax);
+
+      kpiBonus.innerHTML = `<span class="v-range"><span>${fmt(bMin)}</span><span class="dash">—</span><span>${fmt(bMax)}</span></span>`;
+      kpi40.innerHTML  = `<span class="v-range"><span>${fmt(compound(bMin, 0.40, years))}</span><span class="dash">—</span><span>${fmt(compound(bMax, 0.40, years))}</span></span>`;
+      kpi100.innerHTML = `<span class="v-range"><span>${fmt(compound(bMin, 1.00, years))}</span><span class="dash">—</span><span>${fmt(compound(bMax, 1.00, years))}</span></span>`;
+      kpi200.innerHTML = `<span class="v-range"><span>${fmt(compound(bMin, 2.00, years))}</span><span class="dash">—</span><span>${fmt(compound(bMax, 2.00, years))}</span></span>`;
+      return;
+    }
+
+    let fee = 0;
+    if(deal === 'sec_seller') fee = 2.0;      // вторичка — продавец
+    if(deal === 'sec_buyer')  fee = 1.5;      // вторичка — покупатель
+
+    const bonus = computeBonus(price, fee);
+
+    kpiBonus.textContent = fmt(bonus);
+    kpi40.textContent  = fmt(compound(bonus, 0.40, years));
+    kpi100.textContent = fmt(compound(bonus, 1.00, years));
+    kpi200.textContent = fmt(compound(bonus, 2.00, years));
+  }
+
+  btnRun.addEventListener('click', () => {
+    const price = parseFloat(elPrice.value || '0');
+    render(price);
+  });
+    btnReset.addEventListener('click', () => {
+    elPrice.value = '';
+    elDeal.value = '';
+    elYears.value = '1';
+    render(0);
+  });
+})();
+
+function formatRub(n){
+  return Math.round(n).toLocaleString("ru-RU") + " ₽";
+}
+function formatRange(minV, maxV){
+  if (Math.abs(minV - maxV) < 0.5) return formatRub(minV);
+  return formatRub(minV) + " — " + formatRub(maxV);
+}
+
+function calculate() {
+  const price = parseFloat(document.getElementById("price").value);
+  const type = document.getElementById("type").value;
+  const years = parseInt(document.getElementById("years")?.value || "1", 10);
+
+  if (!price || price <= 0) return;
+
+  const k = 0.165; // 55% * 30% (скрыто)
+
+  let bonusMin, bonusMax, explain;
+
+  if (type === "new") {
+    // Новостройка: условия варьируются (3–5% скрыто)
+    const cMin = 0.03, cMax = 0.05;
+    bonusMin = price * cMin * k;
+    bonusMax = price * cMax * k;
+    explain = "Для новостроек сумма может отличаться по условиям конкретного объекта. Точная сумма — после подбора.";
+  } else if (type === "sell") {
+    const c = 0.02;
+    bonusMin = bonusMax = price * c * k;
+    explain = "Сумма формируется из условий сделки и становится основой вашего инвестиционного капитала.";
+  } else {
+    const c = 0.015;
+    bonusMin = bonusMax = price * c * k;
+    explain = "Сумма формируется из условий сделки и становится основой вашего инвестиционного капитала.";
+  }
+
+  // Capital
+  const capEl = document.getElementById("capital");
+  if (capEl) capEl.textContent = formatRange(bonusMin, bonusMax);
+
+  // Scenarios (range only for newbuild)
+  const sc40Min = bonusMin * Math.pow(1.4, years);
+  const sc40Max = bonusMax * Math.pow(1.4, years);
+
+  const sc100Min = bonusMin * Math.pow(2, years);
+  const sc100Max = bonusMax * Math.pow(2, years);
+
+  const sc200Min = bonusMin * Math.pow(3, years);
+  const sc200Max = bonusMax * Math.pow(3, years);
+
+  const el40 = document.getElementById("sc40");
+  const el100 = document.getElementById("sc100");
+  const el200 = document.getElementById("sc200");
+
+  if (el40) el40.textContent = formatRange(sc40Min, sc40Max);
+  if (el100) el100.textContent = formatRange(sc100Min, sc100Max);
+  if (el200) el200.textContent = formatRange(sc200Min, sc200Max);
+
+  const exEl = document.getElementById("explainText");
+  if (exEl) exEl.textContent = explain;
+}
+
+function resetCalc() {
+  const priceEl = document.getElementById("price");
+  if (priceEl) priceEl.value = "";
+  const capEl = document.getElementById("capital");
+  if (capEl) capEl.textContent = "—";
+  const el40 = document.getElementById("sc40");
+  const el100 = document.getElementById("sc100");
+  const el200 = document.getElementById("sc200");
+  if (el40) el40.textContent = "—";
+  if (el100) el100.textContent = "—";
+  if (el200) el200.textContent = "—";
+  const exEl = document.getElementById("explainText");
+  if (exEl) exEl.textContent = "Сумма формируется из условий сделки и становится основой вашего инвестиционного капитала.";
+}
+
+
+// ===== Selection neon (no auto-calc) + WOW results (click only) =====
+(function(){
+  const priceEl = document.getElementById("calcPrice");
+  const dealEl  = document.getElementById("calcDeal");
+  const yearsEl = document.getElementById("calcYears");
+  const runBtn  = document.getElementById("calcRun");
+
+  function markSelected(el){
+    if(!el) return;
+    const field = el.closest(".calc-field");
+    if(!field) return;
+    field.classList.add("is-selected");
+    field.classList.remove("sweep");
+    void field.offsetWidth;
+    field.classList.add("sweep");
+    setTimeout(()=>field.classList.remove("sweep"), 600);
+  }
+
+  // Only visual highlight on change/input (no calculation)
+  dealEl?.addEventListener("change", ()=>markSelected(dealEl));
+  yearsEl?.addEventListener("change", ()=>markSelected(yearsEl));
+  priceEl?.addEventListener("input",  ()=>markSelected(priceEl));
+
+  const capBox = document.querySelector(".capital-box");
+  const cards = document.querySelectorAll(".kpi-grid .kpi");
+
+  function parseNums(text){
+    const nums = (text || "").match(/[0-9][0-9\s]*/g);
+    if(!nums || !nums.length) return null;
+    const vals = nums.map(s=>parseInt(s.replace(/\s/g,''),10));
+    return vals.length === 1 ? vals[0] : vals.slice(0,2);
+  }
+  function fmtRub(n){ return Math.round(n).toLocaleString("ru-RU") + " ₽"; }
+  function fmtRange(a,b){
+    if (Math.abs(a-b) < 0.5) return fmtRub(a);
+    return fmtRub(a) + " — " + fmtRub(b);
+  }
+  function easeOut(p){ return 1 - Math.pow(1-p, 3); }
+
+  function animateEl(el){
+    const to = parseNums(el.textContent);
+    if(to === null) return;
+
+    const prev = parseNums(el.getAttribute("data-prev") || "");
+    el.setAttribute("data-prev", el.textContent);
+
+    const start = performance.now();
+    const dur = 520;
+
+    if(Array.isArray(to)){
+      const [toA,toB] = to;
+      const fromA = Array.isArray(prev) ? prev[0] : Math.round(toA*0.85);
+      const fromB = Array.isArray(prev) ? prev[1] : Math.round(toB*0.85);
+      const tick = (t)=>{
+        const p = Math.min(1,(t-start)/dur);
+        const e = easeOut(p);
+        const a = fromA + (toA-fromA)*e;
+        const b = fromB + (toB-fromB)*e;
+        el.textContent = fmtRange(a,b);
+        if(p<1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    } else {
+      const toV = to;
+      const fromV = (typeof prev === "number") ? prev : Math.round(toV*0.85);
+      const tick = (t)=>{
+        const p = Math.min(1,(t-start)/dur);
+        const e = easeOut(p);
+        const v = fromV + (toV-fromV)*e;
+        el.textContent = fmtRub(v);
+        if(p<1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+  }
+
+  function pulse(){
+    if(capBox){
+      capBox.classList.remove("wow");
+      void capBox.offsetWidth;
+      capBox.classList.add("wow");
+    }
+    cards.forEach(c=>{
+      c.classList.remove("wow");
+      void c.offsetWidth;
+      c.classList.add("wow");
+      setTimeout(()=>c.classList.remove("wow"), 1100);
+    });
+  }
+
+  runBtn?.addEventListener("click", ()=>{
+    // after calculator writes results
+    setTimeout(()=>{
+      pulse();
+      ["kpiBonus","kpi40","kpi100","kpi200"].forEach(id=>{
+        const el = document.getElementById(id);
+        if(el) animateEl(el);
+      });
+    }, 0);
+  });
+})();
+
+
+// ===== Success glass trigger (v12 persistent) =====
+(function(){
+  const runBtn = document.getElementById("calcRun");
+  const rightPanel = document.querySelector(".principle-right, .calc-right");
+
+  // форматируем ввод стоимости (чтобы было 10 000 000)
+  priceEl?.addEventListener("blur", ()=> formatInput(priceEl));
+  if(priceEl){ priceEl.setAttribute("inputmode","numeric"); }
+  // подсказка
+  if(priceEl && !priceEl.getAttribute("placeholder")){
+    priceEl.setAttribute("placeholder","10 000 000");
+  }
+
+  const priceEl = document.getElementById("calcPrice");
+  const dealEl  = document.getElementById("calcDeal");
+  const yearsEl = document.getElementById("calcYears");
+
+  function setSuccess(on){
+    if(!rightPanel) return;
+    if(on) rightPanel.classList.add("success");
+    else rightPanel.classList.remove("success");
+}
+
+  // Success ONLY after explicit calculation
+  runBtn?.addEventListener("click", ()=> setSuccess(true));
+
+  // Remove success when user changes inputs (no recalculation)
+})();
+
+
+// ===== Calculator override (v19) - ONLY by button click =====
+(function(){
+  const priceEl = document.getElementById("calcPrice");
+  const dealEl  = document.getElementById("calcDeal");
+  const yearsEl = document.getElementById("calcYears");
+  const runBtn  = document.getElementById("calcRun");
+
+  const outBonus = document.getElementById("kpiBonus");
+  const out40    = document.getElementById("kpi40");
+  const out100   = document.getElementById("kpi100");
+  const out200   = document.getElementById("kpi200");
+
+  const rightPanel = document.querySelector(".principle-right, .calc-right");
+
+  
+  function parsePrice(v){
+    const digits = (v || "").toString().replace(/[^\d]/g,"");
+    return digits ? parseInt(digits,10) : 0;
+  }
+  function formatInput(el){
+    if(!el) return;
+    const n = parsePrice(el.value);
+    if(!n){ el.value = ""; return; }
+    el.value = n.toLocaleString("ru-RU");
+  }
+function fmtRub(n){
+    return Math.round(n).toLocaleString("ru-RU") + " ₽";
+  }
+  function fmtRange(a,b){
+    if (Math.abs(a-b) < 0.5) return fmtRub(a);
+    return fmtRub(a) + " — " + fmtRub(b);
+  }
+
+  function compute(){
+    const price = parsePrice(priceEl?.value);
+    const deal  = dealEl?.value || "";
+    const years = parseInt(yearsEl?.value || "1", 10) || 1;
+
+    if (!price || price <= 0 || !deal){
+      if(outBonus) outBonus.textContent = "—";
+      if(out40) out40.textContent = "—";
+      if(out100) out100.textContent = "—";
+      if(out200) out200.textContent = "—";
+      return;
+    }
+
+    const k = 0.165; // 55% * 30% (скрыто)
+    let bMin=0, bMax=0;
+
+    if (deal === "newbuild"){
+      bMin = price * 0.03 * k;
+      bMax = price * 0.05 * k;
+    } else if (deal === "sec_seller"){
+      bMin = bMax = price * 0.02 * k;
+    } else if (deal === "sec_buyer"){
+      bMin = bMax = price * 0.015 * k;
+    } else {
+      return;
+    }
+
+    const s40Min  = bMin * Math.pow(1.4, years);
+    const s40Max  = bMax * Math.pow(1.4, years);
+    const s100Min = bMin * Math.pow(2.0, years);
+    const s100Max = bMax * Math.pow(2.0, years);
+    const s200Min = bMin * Math.pow(3.0, years);
+    const s200Max = bMax * Math.pow(3.0, years);
+
+    if(outBonus) outBonus.textContent = fmtRange(bMin,bMax);
+    if(out40) out40.textContent = fmtRange(s40Min,s40Max);
+    if(out100) out100.textContent = fmtRange(s100Min,s100Max);
+    if(out200) out200.textContent = fmtRange(s200Min,s200Max);
+
+    rightPanel?.classList.add("success");
+    if(rightPanel){
+      rightPanel.classList.remove("wow");
+      void rightPanel.offsetWidth;
+      rightPanel.classList.add("wow");
+      try{ document.dispatchEvent(new CustomEvent("calc:wow", {detail:{panel:rightPanel}})); }catch(e){}
+      setTimeout(()=> rightPanel.classList.remove("wow"), 1200);
+    }
+
+  }
+
+  // Capture-phase click: stops any other handlers that were auto-rendering / breaking
+  runBtn?.addEventListener("click", function(e){
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    compute();
+  }, true);
+})();
+
+
+
+// ===== Sparks burst on WOW (v23) =====
+(function(){
+  function burst(panel){
+    const host = panel?.querySelector(".wow-sparks");
+    if(!host) return;
+    host.innerHTML = "";
+    const spots = [
+      {x:18,y:22, dx:-90, dy:-40},
+      {x:82,y:20, dx:90, dy:-35},
+      {x:22,y:78, dx:-80, dy:40},
+      {x:86,y:74, dx:95, dy:45},
+      {x:55,y:18, dx:0, dy:-70},
+      {x:50,y:82, dx:0, dy:70},
+    ];
+    spots.forEach((s, idx)=>{
+      const el = document.createElement("i");
+      el.style.left = s.x + "%";
+      el.style.top  = s.y + "%";
+      el.style.setProperty("--dx", s.dx + "px");
+      el.style.setProperty("--dy", s.dy + "px");
+      el.style.transform = "translate(0,0) rotate(" + (idx*18) + "deg)";
+      host.appendChild(el);
+      // trigger
+      requestAnimationFrame(()=>{ el.style.opacity = "1"; });
+    });
+  }
+
+  // Hook to calc done by intercepting wow class add: listen to click and then burst after a tick
+  document.addEventListener("calc:wow", (e)=>{
+    const panel = e.detail?.panel;
+    burst(panel);
+  });
+})();
+
 </script>
 
 </body>
