@@ -2329,6 +2329,601 @@ h4,h5,h6{
   text-shadow: 0 1px 10px rgba(0,0,0,.35);
 }
 
+
+/* ===== FIX "Включить атмосферу" BUTTON VISIBILITY ===== */
+
+#soundToggle,
+.sound-toggle,
+.atmosphere-btn{
+  color: #0f172a !important;
+  background: rgba(255,255,255,.92) !important;
+  border: 1px solid rgba(0,0,0,.15) !important;
+  font-weight: 600;
+  box-shadow: 0 8px 25px rgba(0,0,0,.25);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+#soundToggle:hover,
+.sound-toggle:hover,
+.atmosphere-btn:hover{
+  background: #ffffff !important;
+  transform: translateY(-2px);
+}
+
+
+/* ===== ATMOSPHERE BUTTON: FULL WOW (FIRE) ===== */
+#soundToggle,
+.sound-toggle,
+.atmosphere-btn{
+  position: relative !important;
+  overflow: hidden !important;
+  transform: translateZ(0);
+  transition: transform .22s ease, box-shadow .22s ease, filter .22s ease !important;
+}
+
+/* neon ring */
+#soundToggle::before,
+.sound-toggle::before,
+.atmosphere-btn::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:999px;
+  background: conic-gradient(from 180deg,
+    rgba(96,165,250,.0),
+    rgba(96,165,250,.9),
+    rgba(255,99,132,.85),
+    rgba(96,165,250,.9),
+    rgba(96,165,250,.0)
+  );
+  filter: blur(10px);
+  opacity:.0;
+  transition: opacity .22s ease;
+  z-index:0;
+}
+
+/* inner shimmer */
+#soundToggle::after,
+.sound-toggle::after,
+.atmosphere-btn::after{
+  content:"";
+  position:absolute;
+  top:-20%;
+  left:-140%;
+  width:140%;
+  height:140%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,.55), transparent);
+  transform: skewX(-18deg);
+  opacity:.65;
+  transition: left .65s ease;
+  z-index:1;
+}
+
+/* keep text above effects */
+#soundToggle > *,
+.sound-toggle > *,
+.atmosphere-btn > *{
+  position: relative;
+  z-index: 2;
+}
+
+#soundToggle:hover,
+.sound-toggle:hover,
+.atmosphere-btn:hover{
+  transform: translateY(-3px) scale(1.04);
+  box-shadow:
+    0 18px 55px rgba(96,165,250,.42),
+    0 0 38px rgba(255,99,132,.25);
+  filter: saturate(1.1);
+}
+
+#soundToggle:hover::before,
+.sound-toggle:hover::before,
+.atmosphere-btn:hover::before{
+  opacity:1;
+}
+
+#soundToggle:hover::after,
+.sound-toggle:hover::after,
+.atmosphere-btn:hover::after{
+  left:140%;
+}
+
+/* click pulse */
+#soundToggle:active,
+.sound-toggle:active,
+.atmosphere-btn:active{
+  transform: translateY(-1px) scale(1.01);
+  box-shadow:
+    0 10px 30px rgba(96,165,250,.35),
+    0 0 26px rgba(255,99,132,.22);
+}
+
+
+/* ===== FIX ATMOSPHERE BUTTON POSITION ===== */
+
+#soundToggle,
+.sound-toggle,
+.atmosphere-btn{
+  display:inline-flex !important;
+  align-items:center;
+  justify-content:center;
+  vertical-align:middle;
+}
+
+/* Prevent pseudo elements from affecting layout */
+#soundToggle::before,
+#soundToggle::after,
+.sound-toggle::before,
+.sound-toggle::after,
+.atmosphere-btn::before,
+.atmosphere-btn::after{
+  pointer-events:none;
+}
+
+/* Ensure no accidental margin applied */
+#soundToggle{
+  margin:0 !important;
+}
+
+
+/* ===== STICKY ATMOSPHERE BUTTON (RIGHT SIDE, ALWAYS VISIBLE) ===== */
+#soundToggle{
+  position: fixed !important;
+  right: 18px;
+  top: 18px;
+  z-index: 9999;
+}
+
+/* On small screens, move to bottom-right for comfort */
+@media (max-width: 640px){
+  #soundToggle{
+    top: auto;
+    bottom: 18px;
+    right: 14px;
+  }
+}
+
+
+/* ===== FIX STICKY ATMOSPHERE BUTTON SIZE (NOT GIANT) ===== */
+#soundToggle{
+  width: auto !important;
+  height: auto !important;
+  max-width: 260px;
+  padding: 12px 16px !important;
+  border-radius: 999px !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+/* Make sure any internal icon doesn't blow up */
+#soundToggle svg,
+#soundToggle img{
+  width: 18px !important;
+  height: 18px !important;
+}
+
+
+/* ===== HARD FIX ATMOSPHERE BUTTON SIZE + POSITION ===== */
+
+#soundToggle{
+  position: fixed !important;
+  right: 24px !important;
+  top: 100px !important;
+
+  width: auto !important;
+  min-width: unset !important;
+  max-width: unset !important;
+
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px 18px !important;
+  border-radius: 40px !important;
+
+  font-size: 14px !important;
+  white-space: nowrap !important;
+
+  z-index: 9999 !important;
+}
+
+/* Remove expanding neon layer */
+#soundToggle::before{
+  display:none !important;
+}
+
+
+/* ===== FINAL CLEAN FIX: ATMOSPHERE BUTTON RIGHT SIDE ===== */
+
+#soundToggle{
+  position: fixed !important;
+  right: 30px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+
+  width: auto !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px 18px !important;
+  border-radius: 40px !important;
+
+  background: rgba(255,255,255,.92) !important;
+  box-shadow: 0 12px 35px rgba(0,0,0,.25) !important;
+
+  font-size: 14px !important;
+  white-space: nowrap !important;
+
+  z-index: 9999 !important;
+}
+
+/* Remove any expanding pseudo layers */
+#soundToggle::before,
+#soundToggle::after{
+  display:none !important;
+}
+
+/* Remove accidental right white panel if created by dark section */
+.dark::before,
+.dark::after{
+  display:none !important;
+}
+
+
+/* ===== SMALL HORIZONTAL ATMOSPHERE BUTTON ===== */
+
+#soundToggle{
+  position: fixed !important;
+  right: 24px !important;
+  bottom: 24px !important;
+  top: auto !important;
+  transform: none !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 10px 16px !important;
+  border-radius: 30px !important;
+
+  font-size: 13px !important;
+  gap: 8px !important;
+
+  width: auto !important;
+  height: auto !important;
+
+  background: rgba(255,255,255,.95) !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,.25) !important;
+
+  z-index: 9999 !important;
+}
+
+/* Remove any vertical container look */
+#soundToggle::before,
+#soundToggle::after{
+  display:none !important;
+}
+
+
+/* ===== ATMOSPHERE BUTTON WOW (SAFE, NO RESIZE) ===== */
+#soundToggle{
+  position: fixed !important; /* keep */
+  overflow: hidden !important;
+  isolation: isolate; /* keep pseudo layers contained */
+  transition: transform .22s ease, box-shadow .22s ease, filter .22s ease !important;
+}
+
+/* subtle neon edge glow */
+#soundToggle::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius: inherit;
+  background: conic-gradient(from 180deg,
+    rgba(37,99,235,.0),
+    rgba(37,99,235,.85),
+    rgba(220,38,38,.75),
+    rgba(37,99,235,.85),
+    rgba(37,99,235,.0)
+  );
+  filter: blur(10px);
+  opacity: 0;
+  transition: opacity .22s ease;
+  z-index: 0;
+  pointer-events:none;
+}
+
+/* shimmer sweep */
+#soundToggle::after{
+  content:"";
+  position:absolute;
+  top:-40%;
+  left:-140%;
+  width:140%;
+  height:180%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,.60), transparent);
+  transform: skewX(-18deg);
+  opacity:.55;
+  transition: left .7s ease;
+  z-index: 1;
+  pointer-events:none;
+}
+
+#soundToggle > *{
+  position: relative;
+  z-index: 2;
+}
+
+#soundToggle:hover{
+  transform: translateY(-2px) scale(1.03);
+  box-shadow:
+    0 14px 32px rgba(0,0,0,.28),
+    0 0 26px rgba(37,99,235,.35),
+    0 0 22px rgba(220,38,38,.22) !important;
+  filter: saturate(1.05);
+}
+
+#soundToggle:hover::before{ opacity: 1; }
+#soundToggle:hover::after{ left: 140%; }
+
+#soundToggle:active{
+  transform: translateY(-1px) scale(1.01);
+}
+
+
+/* ===== CALC INTRO TEXT: BOLD BLACK ===== */
+#calculator .lead,
+#calculator .sub,
+#calculator p.lead,
+#calculator .container > p{
+  color: #0b0f19 !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+}
+
+
+/* ===== ULTRA FIRE EFFECT (NO SIZE CHANGE) ===== */
+
+#soundToggle{
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease !important;
+}
+
+/* animated fire glow */
+@keyframes firePulse {
+  0%   { box-shadow: 0 10px 25px rgba(0,0,0,.25),
+                     0 0 15px rgba(59,130,246,.4),
+                     0 0 10px rgba(239,68,68,.3); }
+  50%  { box-shadow: 0 12px 28px rgba(0,0,0,.28),
+                     0 0 25px rgba(59,130,246,.6),
+                     0 0 20px rgba(239,68,68,.55); }
+  100% { box-shadow: 0 10px 25px rgba(0,0,0,.25),
+                     0 0 15px rgba(59,130,246,.4),
+                     0 0 10px rgba(239,68,68,.3); }
+}
+
+#soundToggle:hover{
+  transform: translateY(-2px) scale(1.03);
+  animation: firePulse 1.4s infinite ease-in-out;
+  filter: brightness(1.05) saturate(1.1);
+}
+
+/* subtle shimmer sweep */
+#soundToggle::after{
+  content:"";
+  position:absolute;
+  top:-40%;
+  left:-140%;
+  width:140%;
+  height:180%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,.65), transparent);
+  transform: skewX(-18deg);
+  transition: left .7s ease;
+  pointer-events:none;
+}
+
+#soundToggle:hover::after{
+  left:140%;
+}
+
+
+/* ===== ALWAYS-ON SOFT PULSE + CLICK BURST (NO RESIZE) ===== */
+
+/* subtle idle pulse (so it feels alive but not annoying) */
+@keyframes fireIdle {
+  0%   { box-shadow: 0 10px 25px rgba(0,0,0,.24),
+                     0 0 10px rgba(59,130,246,.22),
+                     0 0 8px rgba(239,68,68,.18); }
+  50%  { box-shadow: 0 12px 28px rgba(0,0,0,.26),
+                     0 0 16px rgba(59,130,246,.32),
+                     0 0 14px rgba(239,68,68,.26); }
+  100% { box-shadow: 0 10px 25px rgba(0,0,0,.24),
+                     0 0 10px rgba(59,130,246,.22),
+                     0 0 8px rgba(239,68,68,.18); }
+}
+
+#soundToggle{
+  animation: fireIdle 2.8s ease-in-out infinite;
+}
+
+/* on hover — stronger pulse (already defined) wins */
+#soundToggle:hover{
+  animation: firePulse 1.4s ease-in-out infinite;
+}
+
+/* click burst */
+@keyframes clickBurst{
+  0%{ filter: brightness(1.05) saturate(1.1); box-shadow:
+      0 12px 30px rgba(0,0,0,.28),
+      0 0 26px rgba(59,130,246,.55),
+      0 0 22px rgba(239,68,68,.45); }
+  100%{ filter: brightness(1.0) saturate(1.0); box-shadow:
+      0 10px 25px rgba(0,0,0,.25),
+      0 0 14px rgba(59,130,246,.30),
+      0 0 12px rgba(239,68,68,.22); }
+}
+
+#soundToggle:active{
+  animation: clickBurst .35s ease-out 1;
+}
+
+
+/* ===== FINAL FIRE BUTTON OVERRIDE (VISIBLE, NO RESIZE) ===== */
+
+/* lock placement + size */
+#soundToggle{
+  position: fixed !important;
+  right: 24px !important;
+  bottom: 24px !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+
+  padding: 10px 16px !important;
+  border-radius: 30px !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+
+  background: rgba(255,255,255,.95) !important;
+  border: 1px solid rgba(0,0,0,.14) !important;
+
+  overflow: hidden !important;
+  isolation: isolate;
+  z-index: 9999 !important;
+}
+
+/* force pseudo layers ON (some earlier rules disabled them) */
+#soundToggle::before,
+#soundToggle::after{
+  display:block !important;
+}
+
+/* outer fire glow ring */
+#soundToggle::before{
+  content:"" !important;
+  position:absolute;
+  inset:-6px;
+  border-radius: inherit;
+  background: conic-gradient(from 180deg,
+    rgba(37,99,235,.0),
+    rgba(37,99,235,.85),
+    rgba(220,38,38,.78),
+    rgba(245,158,11,.55),
+    rgba(37,99,235,.85),
+    rgba(37,99,235,.0)
+  );
+  filter: blur(12px);
+  opacity:.85;
+  z-index:0;
+  pointer-events:none;
+  animation: fireRing 1.8s linear infinite;
+}
+
+/* shimmer sweep */
+#soundToggle::after{
+  content:"" !important;
+  position:absolute;
+  top:-60%;
+  left:-160%;
+  width:160%;
+  height:220%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,.75), transparent);
+  transform: skewX(-18deg);
+  opacity:.55;
+  z-index:1;
+  pointer-events:none;
+  animation: fireSweep 3.2s ease-in-out infinite;
+}
+
+/* keep content above layers */
+#soundToggle > *{ position:relative; z-index:2; }
+
+@keyframes fireRing{
+  0%{ transform: rotate(0deg); filter: blur(12px); opacity:.80; }
+  50%{ filter: blur(14px); opacity:.95; }
+  100%{ transform: rotate(360deg); filter: blur(12px); opacity:.80; }
+}
+
+@keyframes fireSweep{
+  0%{ left:-160%; }
+  45%{ left:-160%; }
+  70%{ left:160%; }
+  100%{ left:160%; }
+}
+
+/* visible breathing glow (no size change) */
+@keyframes fireBreath{
+  0%{ box-shadow: 0 10px 25px rgba(0,0,0,.25), 0 0 18px rgba(37,99,235,.35), 0 0 14px rgba(220,38,38,.25); }
+  50%{ box-shadow: 0 12px 30px rgba(0,0,0,.28), 0 0 28px rgba(37,99,235,.55), 0 0 24px rgba(220,38,38,.45); }
+  100%{ box-shadow: 0 10px 25px rgba(0,0,0,.25), 0 0 18px rgba(37,99,235,.35), 0 0 14px rgba(220,38,38,.25); }
+}
+
+#soundToggle{
+  animation: fireBreath 2.2s ease-in-out infinite !important;
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease !important;
+}
+
+#soundToggle:hover{
+  transform: translateY(-2px) scale(1.03) !important;
+  filter: brightness(1.04) saturate(1.12) !important;
+}
+
+#soundToggle:active{
+  transform: translateY(-1px) scale(1.01) !important;
+}
+
+
+/* ===== SOFT SLOW PREMIUM FIRE ===== */
+
+/* slower rotating ring */
+@keyframes fireRing{
+  0%{ transform: rotate(0deg); opacity:.55; }
+  100%{ transform: rotate(360deg); opacity:.55; }
+}
+
+/* much slower shimmer */
+@keyframes fireSweep{
+  0%{ left:-160%; }
+  60%{ left:-160%; }
+  85%{ left:160%; }
+  100%{ left:160%; }
+}
+
+/* very soft breathing glow */
+@keyframes fireBreath{
+  0%{ box-shadow: 0 10px 25px rgba(0,0,0,.25),
+                   0 0 12px rgba(37,99,235,.25),
+                   0 0 10px rgba(220,38,38,.18); }
+  50%{ box-shadow: 0 12px 28px rgba(0,0,0,.27),
+                   0 0 18px rgba(37,99,235,.35),
+                   0 0 16px rgba(220,38,38,.28); }
+  100%{ box-shadow: 0 10px 25px rgba(0,0,0,.25),
+                   0 0 12px rgba(37,99,235,.25),
+                   0 0 10px rgba(220,38,38,.18); }
+}
+
+#soundToggle::before{
+  animation: fireRing 8s linear infinite !important;
+}
+
+#soundToggle::after{
+  animation: fireSweep 6s ease-in-out infinite !important;
+}
+
+#soundToggle{
+  animation: fireBreath 4s ease-in-out infinite !important;
+}
+
 </style>
 </head>
 
