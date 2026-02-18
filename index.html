@@ -2095,6 +2095,240 @@ html{ overflow-x:hidden; }
   left:120%;
 }
 
+
+/* ===============================
+   EXACT HERO (PHOTO BLOCK) STYLE — APPLY TO ALL BLOCKS
+   Source: HERO LIVE BACKGROUND (REAL MOTION) in this file
+   =============================== */
+
+/* Reuse hero palette as variables (single source of truth) */
+:root{
+  --hero-live-bg: radial-gradient(1200px 800px at 20% 50%, rgba(30,70,130,.60), transparent 60%),
+    radial-gradient(1200px 800px at 80% 50%, rgba(210,120,120,.48), transparent 60%),
+    linear-gradient(
+      90deg,
+      rgba(25,45,80,.92),
+      rgba(245,238,230,.96),
+      rgba(200,105,105,.82)
+    );
+  --hero-live-size: 160% 160%;
+  --hero-live-anim: heroFloat 18s ease-in-out infinite;
+}
+
+/* Apply the same animated background to the whole page */
+body{
+  background: var(--hero-live-bg) !important;
+  background-size: var(--hero-live-size) !important;
+  animation: var(--hero-live-anim) !important;
+}
+
+/* Make sections "glass" so the hero background is visible everywhere */
+.section, .soft, .dark{
+  background: transparent !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Put the live background layer into each block too (so it's identical even if body gets overridden) */
+.section::before,
+.soft::before,
+.dark::before,
+#capital-wow::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: var(--hero-live-bg);
+  background-size: var(--hero-live-size);
+  animation: var(--hero-live-anim);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* Add the same vignette feel as in the hero (copied from .hero::before), on every block */
+.section::after,
+.soft::after,
+.dark::after,
+#capital-wow::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:1;
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(0,0,0,.22) 100%);
+  pointer-events:none;
+}
+
+/* Keep content above layers */
+.hero .container,
+.section .container,
+.soft .container,
+.dark .container,
+#capital-wow .container{
+  position: relative;
+  z-index: 2;
+}
+
+/* Slightly deepen contrast inside the dark section while keeping the same hero look */
+.dark::after{
+  background:
+    radial-gradient(120% 90% at 50% 50%, transparent 52%, rgba(0,0,0,.32) 100%);
+}
+
+/* Keep cards readable on the animated background */
+.card,
+.principle-left,
+.principle-right,
+.quote,
+.calc-panel{
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+
+/* ===== TEXT READABILITY FIX FOR BLUE/RED BACKGROUND ===== */
+
+body{
+  color:#f8fafc !important;
+}
+
+h1,h2,h3,h4,h5,h6{
+  color:#ffffff !important;
+}
+
+.p,
+.muted{
+  color:rgba(248,250,252,.88) !important;
+}
+
+.lead{
+  color:rgba(255,255,255,.92) !important;
+}
+
+.small,
+.caption{
+  color:rgba(248,250,252,.75) !important;
+}
+
+.card,
+.principle-left,
+.principle-right,
+.quote,
+.calc-panel{
+  color:#ffffff !important;
+}
+
+
+/* ===== WOW Readability + Premium Depth ===== */
+
+/* Headline depth */
+h1,h2,h3{
+  text-shadow: 0 2px 14px rgba(0,0,0,.45);
+}
+h4,h5,h6{
+  text-shadow: 0 2px 10px rgba(0,0,0,.35);
+}
+
+/* Slight glow for primary CTA buttons on animated bg */
+.btn-primary{
+  box-shadow: 0 0 26px rgba(96,165,250,.45);
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+.btn-primary:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 0 38px rgba(96,165,250,.65);
+}
+
+/* Stabilize contrast where background is the most dynamic */
+.hero .container,
+.section .container,
+.soft .container,
+.dark .container,
+#capital-wow .container{
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+/* Make muted text slightly clearer without losing hierarchy */
+.muted{
+  color: rgba(248,250,252,.80) !important;
+}
+
+
+/* ===== PREMIUM SOFT TEXT STABILIZER (OPTION 1) ===== */
+
+/* Make containers positioning context */
+.hero .container,
+.section .container,
+.soft .container,
+.dark .container,
+#capital-wow .container{
+  position: relative;
+  z-index: 2;
+}
+
+/* Soft cinematic underlay behind text (no layout shift) */
+
+
+
+/* ===== PREMIUM SOFT TEXT (EXCLUDE CALC + WOW) ===== */
+.hero .container::before,
+.section:not(#calc):not(#capital-wow) .container::before,
+.soft:not(#calc):not(#capital-wow) .container::before,
+.dark:not(#calc):not(#capital-wow) .container::before{
+  content: "";
+  position: absolute;
+  inset: -20px;
+  background: linear-gradient(
+    180deg,
+    rgba(8,12,20,.35),
+    rgba(8,12,20,.55)
+  );
+  border-radius: 32px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+
+/* ===== STRATEGY BLOCK TEXT WHITE ===== */
+#strategy,
+#strategy h1,
+#strategy h2,
+#strategy h3,
+#strategy p{
+  color: #ffffff !important;
+}
+
+
+/* ===== FIX: remove premium underlay in CALCULATOR + WOW blocks ===== */
+#calculator .container::before,
+#capital-wow .container::before{
+  content: none !important;
+}
+
+/* Calculator: keep it clean, no extra haze */
+#calculator .container{
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* ===== FIX: make text in "Стратегия" block fully readable ===== */
+#capital,
+#capital .p,
+#capital .muted,
+#capital p,
+#capital li{
+  color: rgba(255,255,255,.92) !important;
+}
+#capital h2, #capital h3{
+  color:#ffffff !important;
+}
+#capital ul li{
+  text-shadow: 0 1px 10px rgba(0,0,0,.35);
+}
+
 </style>
 </head>
 
